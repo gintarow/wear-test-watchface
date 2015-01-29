@@ -1,0 +1,10 @@
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/classes/debug
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-0a8493be468ebf7d43f6c6004123f79bd068e430.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-751853247c52b4f5655c3dc072c480e57766f04c.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/classes-9a6c2215657e6fd5a4c3152ddbe0b3351422c71e.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/classes-fc89cb94798720f4165cf429510f6ce8565d7403.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-f7899b7b9a3ed69d4badd34a76a9d186f57a967d.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/classes-04828121d71ad6598fc1ca62903024149344f6c8.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/classes-8317601f3c521b8a8546132f7a1b942ec7473292.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/classes-171c99976b5b5248b393b8da0ca74f81b7e5d15a.jar
+/Users/Kikuchi/Development/Android/WatchFace/Application/build/intermediates/pre-dexed/debug/classes-ac7721e1225d5b9fc5000e7bf2c3eee2fad8f89f.jar

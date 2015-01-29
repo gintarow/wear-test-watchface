@@ -1,0 +1,10 @@
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/classes/debug
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-73782ef0bffb2be8cc8a5e9e149940d3137459b5.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-751853247c52b4f5655c3dc072c480e57766f04c.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/classes-73502f993753124bce5555597fdd512b8adebb78.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/classes-d244aa82a7e2914f334b2824aa4453ed852e298d.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-82cda143d93448148feb240a1662c720c14b8db0.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/classes-4277dfce93f0290359325c2b5c70e300c690f46b.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/classes-65965afc3cdd501de161d00bf333e98ac74622a4.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/classes-222ae4d13533ec08977b4e4ef7ba5f0bef481401.jar
+/Users/Kikuchi/Development/Android/WatchFace/Wearable/build/intermediates/pre-dexed/debug/classes-b2036a308df2c822c4cd9805d22f31df6c5ba66d.jar
