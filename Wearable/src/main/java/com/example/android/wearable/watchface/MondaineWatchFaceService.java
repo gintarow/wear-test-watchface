@@ -81,12 +81,12 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
                             Log.v(TAG, "updating time");
                         }
                         invalidate();
-                        if (shouldTimerBeRunning()) {
+//                        if (shouldTimerBeRunning()) {
                             long timeMs = System.currentTimeMillis();
                             long delayMs = INTERACTIVE_UPDATE_RATE_MS
                                     - (timeMs % INTERACTIVE_UPDATE_RATE_MS);
                             mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
-                        }
+//                        }
                         break;
                 }
             }
@@ -141,7 +141,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
             mMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
 
             mSecondPaint = new Paint();
-            mSecondPaint.setARGB(255, 227, 0, 11);
+            mSecondPaint.setARGB(255, 255, 0, 0);
             mSecondPaint.setStrokeWidth(3.f);
             mSecondPaint.setAntiAlias(true);
             mSecondPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -269,18 +269,18 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
 //			canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
 			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
 
-			if (!isInAmbientMode()) {
+//			if (!isInAmbientMode()) {
 				float secX = (float) Math.sin(secRot) * secLength;
 				float secY = (float) -Math.cos(secRot) * secLength;
 				float s_secX = (float) Math.sin(secRot) * 30;
 				float s_secY = (float) -Math.cos(secRot) * 30;
 //				canvas.drawLine(centerX, centerY, centerX + secX, centerY + secY, mSecondPaint);
 				canvas.drawLine(centerX - s_secX, centerY - s_secY, centerX + secX, centerY + secY, mSecondPaint);
-				canvas.drawCircle(centerX + secX, centerY + secY, 9, mSecondPaint);
+				canvas.drawCircle(centerX + secX, centerY + secY, 10, mSecondPaint);
 				canvas.drawCircle(centerX, centerY, 4, mSecondPaint);
-			}else{
-				canvas.drawCircle(centerX, centerY, 3, mTickPaint);
-			}
+//			}else{
+//				canvas.drawCircle(centerX, centerY, 3, mTickPaint);
+//			}
 		}
 
         @Override
@@ -331,9 +331,9 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
                 Log.d(TAG, "updateTimer");
             }
             mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
-            if (shouldTimerBeRunning()) {
+//            if (shouldTimerBeRunning()) {		//ambientmodeでも秒針表示？
                 mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_TIME);
-            }
+//            }
         }
 
         /**
