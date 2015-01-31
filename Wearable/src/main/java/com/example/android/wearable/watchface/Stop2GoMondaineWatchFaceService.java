@@ -28,8 +28,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -38,23 +36,16 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /**
- * Sample analog watch face with a ticking second hand. In ambient mode, the second hand isn't
- * shown. On devices with low-bit ambient mode, the hands are drawn without anti-aliasing in ambient
- * mode. The watch face is drawn with less contrast in mute mode.
+ * Sample analog watch face with a sweep second hand. In ambient mode, the second hand isn't shown.
+ * On devices with low-bit ambient mode, the hands are drawn without anti-aliasing in ambient mode.
+ * The watch face is drawn with less contrast in mute mode.
  *
- * {@link com.example.android.wearable.watchface.SweepWatchFaceService} is similar but has a sweep second hand.
+ * {@link com.example.android.wearable.watchface.AnalogWatchFaceService} is similar but has a ticking second hand.
  */
-public class MondaineWatchFaceService extends CanvasWatchFaceService {
-    private static final String TAG = "MondaineWFService";
-
-    /**
-     * Update rate in milliseconds for interactive mode. We update once a second to advance the
-     * second hand.
-     */
-    private static final long INTERACTIVE_UPDATE_RATE_MS = TimeUnit.SECONDS.toMillis(1);
+public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
+    private static final String TAG = "SweepWatchFaceService";
 
     @Override
     public Engine onCreateEngine() {
@@ -62,35 +53,12 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
     }
 
     private class Engine extends CanvasWatchFaceService.Engine {
-        static final int MSG_UPDATE_TIME = 0;
-
         Paint mHourPaint;
         Paint mMinutePaint;
         Paint mSecondPaint;
         Paint mTickPaint;
         boolean mMute;
         Time mTime;
-
-        /** Handler to update the time once a second in interactive mode. */
-        final Handler mUpdateTimeHandler = new Handler() {
-            @Override
-            public void handleMessage(Message message) {
-                switch (message.what) {
-                    case MSG_UPDATE_TIME:
-                        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                            Log.v(TAG, "updating time");
-                        }
-                        invalidate();
-//                        if (shouldTimerBeRunning()) {
-                            long timeMs = System.currentTimeMillis();
-                            long delayMs = INTERACTIVE_UPDATE_RATE_MS
-                                    - (timeMs % INTERACTIVE_UPDATE_RATE_MS);
-                            mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
-//                        }
-                        break;
-                }
-            }
-        };
 
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
@@ -117,47 +85,40 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
             }
             super.onCreate(holder);
 
-            setWatchFaceStyle(new WatchFaceStyle.Builder(MondaineWatchFaceService.this)
-					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
-					.setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
-					.setShowSystemUiTime(false)
-					.build());
+            setWatchFaceStyle(new WatchFaceStyle.Builder(Stop2GoMondaineWatchFaceService.this)
+                    .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
+                    .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
+                    .setShowSystemUiTime(false)
+                    .build());
 
-            Resources resources = MondaineWatchFaceService.this.getResources();
-//            Drawable backgroundDrawable = resources.getDrawable(R.drawable.bg);
+            Resources resources = Stop2GoMondaineWatchFaceService.this.getResources();
             Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
 
             mHourPaint = new Paint();
-            mHourPaint.setARGB(255, 0, 0, 0);
-            mHourPaint.setStrokeWidth(12.f);
+            mHourPaint.setARGB(255, 200, 200, 200);
+            mHourPaint.setStrokeWidth(5.f);
             mHourPaint.setAntiAlias(true);
-            mHourPaint.setStrokeCap(Paint.Cap.SQUARE);
+            mHourPaint.setStrokeCap(Paint.Cap.ROUND);
 
             mMinutePaint = new Paint();
-            mMinutePaint.setARGB(255, 0, 0, 0);
-            mMinutePaint.setStrokeWidth(10.f);
+            mMinutePaint.setARGB(255, 200, 200, 200);
+            mMinutePaint.setStrokeWidth(3.f);
             mMinutePaint.setAntiAlias(true);
-            mMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
+            mMinutePaint.setStrokeCap(Paint.Cap.ROUND);
 
             mSecondPaint = new Paint();
             mSecondPaint.setARGB(255, 255, 0, 0);
-            mSecondPaint.setStrokeWidth(3.f);
+            mSecondPaint.setStrokeWidth(2.f);
             mSecondPaint.setAntiAlias(true);
             mSecondPaint.setStrokeCap(Paint.Cap.ROUND);
 
             mTickPaint = new Paint();
             mTickPaint.setARGB(100, 255, 255, 255);
-            mTickPaint.setStrokeWidth(3.f);
+            mTickPaint.setStrokeWidth(2.f);
             mTickPaint.setAntiAlias(true);
 
             mTime = new Time();
-        }
-
-        @Override
-        public void onDestroy() {
-            mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
-            super.onDestroy();
         }
 
         @Override
@@ -192,10 +153,6 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
                 mTickPaint.setAntiAlias(antiAlias);
             }
             invalidate();
-
-            // Whether the timer should be running depends on whether we're in ambient mode (as well
-            // as whether we're visible), so we may need to start or stop the timer.
-            updateTimer();
         }
 
         @Override
@@ -213,7 +170,12 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
 
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
-            mTime.setToNow();
+            if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                Log.v(TAG, "onDraw");
+            }
+            long now = System.currentTimeMillis();
+            mTime.set(now);
+            int milliseconds = (int) (now % 1000);
 
             int width = bounds.width();
             int height = bounds.height();
@@ -234,61 +196,51 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
             float centerY = height / 2f;
 
             // Draw the ticks.
-//            float innerTickRadius = centerX - 10;
-//            float outerTickRadius = centerX;
-//            for (int tickIndex = 0; tickIndex < 12; tickIndex++) {
-//                float tickRot = (float) (tickIndex * Math.PI * 2 / 12);
-//                float innerX = (float) Math.sin(tickRot) * innerTickRadius;
-//                float innerY = (float) -Math.cos(tickRot) * innerTickRadius;
-//                float outerX = (float) Math.sin(tickRot) * outerTickRadius;
-//                float outerY = (float) -Math.cos(tickRot) * outerTickRadius;
-//                canvas.drawLine(centerX + innerX, centerY + innerY,
-//                        centerX + outerX, centerY + outerY, mTickPaint);
-//            }
+            float innerTickRadius = centerX - 10;
+            float outerTickRadius = centerX;
+            for (int tickIndex = 0; tickIndex < 12; tickIndex++) {
+                float tickRot = (float) (tickIndex * Math.PI * 2 / 12);
+                float innerX = (float) Math.sin(tickRot) * innerTickRadius;
+                float innerY = (float) -Math.cos(tickRot) * innerTickRadius;
+                float outerX = (float) Math.sin(tickRot) * outerTickRadius;
+                float outerY = (float) -Math.cos(tickRot) * outerTickRadius;
+                canvas.drawLine(centerX + innerX, centerY + innerY,
+                        centerX + outerX, centerY + outerY, mTickPaint);
+            }
 
-            float secRot = mTime.second / 30f * (float) Math.PI;
+            float seconds = mTime.second + milliseconds / 1000f;
+            float secRot = seconds / 30f * (float) Math.PI;
             int minutes = mTime.minute;
             float minRot = minutes / 30f * (float) Math.PI;
             float hrRot = ((mTime.hour + (minutes / 60f)) / 6f ) * (float) Math.PI;
 
-            float secLength = centerX - 55;
-            float minLength = centerX - 25;
-            float hrLength = centerX - 70;
+            float secLength = centerX - 20;
+            float minLength = centerX - 40;
+            float hrLength = centerX - 80;
 
-			float hrX = (float) Math.sin(hrRot) * hrLength;
-			float hrY = (float) -Math.cos(hrRot) * hrLength;
-			float s_hrX = (float) Math.sin(hrRot) * 20;
-			float s_hrY = (float) -Math.cos(hrRot) * 20;
-//			canvas.drawLine(centerX, centerY, centerX + hrX, centerY + hrY, mHourPaint);
-			canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mHourPaint);
+            if (!isInAmbientMode()) {
+                float secX = (float) Math.sin(secRot) * secLength;
+                float secY = (float) -Math.cos(secRot) * secLength;
+                canvas.drawLine(centerX, centerY, centerX + secX, centerY + secY, mSecondPaint);
+            }
 
-			float minX = (float) Math.sin(minRot) * minLength;
-			float minY = (float) -Math.cos(minRot) * minLength;
-			float s_minX = (float) Math.sin(minRot) * 20;
-			float s_minY = (float) -Math.cos(minRot) * 20;
-//			canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
-			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
+            float minX = (float) Math.sin(minRot) * minLength;
+            float minY = (float) -Math.cos(minRot) * minLength;
+            canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
 
-//			if (!isInAmbientMode()) {
-				float secX = (float) Math.sin(secRot) * secLength;
-				float secY = (float) -Math.cos(secRot) * secLength;
-				float s_secX = (float) Math.sin(secRot) * 30;
-				float s_secY = (float) -Math.cos(secRot) * 30;
-//				canvas.drawLine(centerX, centerY, centerX + secX, centerY + secY, mSecondPaint);
-				canvas.drawLine(centerX - s_secX, centerY - s_secY, centerX + secX, centerY + secY, mSecondPaint);
-				canvas.drawCircle(centerX + secX, centerY + secY, 10, mSecondPaint);
-				canvas.drawCircle(centerX, centerY, 4, mSecondPaint);
-//			}else{
-//				canvas.drawCircle(centerX, centerY, 3, mTickPaint);
-//			}
-		}
+            float hrX = (float) Math.sin(hrRot) * hrLength;
+            float hrY = (float) -Math.cos(hrRot) * hrLength;
+            canvas.drawLine(centerX, centerY, centerX + hrX, centerY + hrY, mHourPaint);
+
+            // Draw every frame as long as we're visible and in interactive mode.
+            if (isVisible() && !isInAmbientMode()) {
+                invalidate();
+            }
+        }
 
         @Override
         public void onVisibilityChanged(boolean visible) {
             super.onVisibilityChanged(visible);
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "onVisibilityChanged: " + visible);
-            }
 
             if (visible) {
                 registerReceiver();
@@ -296,13 +248,11 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
                 // Update time zone in case it changed while we weren't visible.
                 mTime.clear(TimeZone.getDefault().getID());
                 mTime.setToNow();
+
+                invalidate();
             } else {
                 unregisterReceiver();
             }
-
-            // Whether the timer should be running depends on whether we're visible (as well as
-            // whether we're in ambient mode), so we may need to start or stop the timer.
-            updateTimer();
         }
 
         private void registerReceiver() {
@@ -311,7 +261,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
             }
             mRegisteredTimeZoneReceiver = true;
             IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
-            MondaineWatchFaceService.this.registerReceiver(mTimeZoneReceiver, filter);
+            Stop2GoMondaineWatchFaceService.this.registerReceiver(mTimeZoneReceiver, filter);
         }
 
         private void unregisterReceiver() {
@@ -319,30 +269,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
                 return;
             }
             mRegisteredTimeZoneReceiver = false;
-            MondaineWatchFaceService.this.unregisterReceiver(mTimeZoneReceiver);
+            Stop2GoMondaineWatchFaceService.this.unregisterReceiver(mTimeZoneReceiver);
         }
-
-        /**
-         * Starts the {@link #mUpdateTimeHandler} timer if it should be running and isn't currently
-         * or stops it if it shouldn't be running but currently is.
-         */
-        private void updateTimer() {
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "updateTimer");
-            }
-            mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
-//            if (shouldTimerBeRunning()) {		//ambientmodeでも秒針表示？
-                mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_TIME);
-//            }
-        }
-
-        /**
-         * Returns whether the {@link #mUpdateTimeHandler} timer should be running. The timer should
-         * only run when we're visible and in interactive mode.
-         */
-        private boolean shouldTimerBeRunning() {
-            return isVisible() && !isInAmbientMode();
-        }
-
     }
 }
