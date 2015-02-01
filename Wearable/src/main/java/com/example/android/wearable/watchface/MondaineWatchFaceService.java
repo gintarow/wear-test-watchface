@@ -267,7 +267,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
 			float s_minY = (float) -Math.cos(minRot) * 20;
 			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
 
-//			if (!isInAmbientMode()) {
+			if (!isInAmbientMode()) {
 				float secX = (float) Math.sin(secRot) * secLength;
 				float secY = (float) -Math.cos(secRot) * secLength;
 				float s_secX = (float) Math.sin(secRot) * 30;
@@ -275,12 +275,9 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
 				canvas.drawLine(centerX - s_secX, centerY - s_secY, centerX + secX, centerY + secY, mSecondPaint);
 				canvas.drawCircle(centerX + secX, centerY + secY, 10, mSecondPaint);
 				canvas.drawCircle(centerX, centerY, 4, mSecondPaint);
-//			}else{
-//				canvas.drawLine(centerX, centerY + 30, centerX, centerY - secLength, mSecondPaint);
-//				canvas.drawCircle(centerX, centerY - secLength, 10, mSecondPaint);
-//				canvas.drawCircle(centerX, centerY, 4, mSecondPaint);
-////				canvas.drawCircle(centerX, centerY, 3, mTickPaint);
-//			}
+			}else{
+				canvas.drawCircle(centerX, centerY, 4, mTickPaint);
+			}
 		}
 
         @Override
@@ -341,8 +338,8 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
          * only run when we're visible and in interactive mode.
          */
         private boolean shouldTimerBeRunning() {
-//            return isVisible() && !isInAmbientMode();
-            return isVisible();// && !isInAmbientMode();	//ambientmodeでも秒針動く？
+            return isVisible() && !isInAmbientMode();
+//			return isVisible();			//ambientmodeでも秒針動く
         }
 
     }

@@ -557,8 +557,9 @@ containing a value of this type.
         public static final int digital_name=0x7f0b002a;
         public static final int digital_pm=0x7f0b002b;
         public static final int mondaine_name=0x7f0b002c;
-        public static final int sweep_name=0x7f0b002d;
-        public static final int tilt_name=0x7f0b002e;
+        public static final int stop2go_name=0x7f0b002d;
+        public static final int sweep_name=0x7f0b002e;
+        public static final int tilt_name=0x7f0b002f;
     }
     public static final class style {
         public static final int CardText=0x7f0c0000;

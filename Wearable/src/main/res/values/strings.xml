@@ -18,6 +18,7 @@
     <string name="tilt_name">Sample Tilt</string>
     <string name="analog_name">Sample Analog</string>
 	<string name="mondaine_name">MONDAINE</string>
+	<string name="stop2go_name">Stop2Go</string>
     <string name="sweep_name">Sample Sweep</string>
     <string name="card_bounds_name">Sample Card Bounds</string>
     <string name="digital_name">Sample Digital</string>

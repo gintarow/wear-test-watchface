@@ -95,28 +95,28 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
 
-            mHourPaint = new Paint();
-            mHourPaint.setARGB(255, 200, 200, 200);
-            mHourPaint.setStrokeWidth(5.f);
-            mHourPaint.setAntiAlias(true);
-            mHourPaint.setStrokeCap(Paint.Cap.ROUND);
+			mHourPaint = new Paint();
+			mHourPaint.setARGB(255, 0, 0, 0);
+			mHourPaint.setStrokeWidth(12.f);
+			mHourPaint.setAntiAlias(true);
+			mHourPaint.setStrokeCap(Paint.Cap.SQUARE);
 
-            mMinutePaint = new Paint();
-            mMinutePaint.setARGB(255, 200, 200, 200);
-            mMinutePaint.setStrokeWidth(3.f);
-            mMinutePaint.setAntiAlias(true);
-            mMinutePaint.setStrokeCap(Paint.Cap.ROUND);
+			mMinutePaint = new Paint();
+			mMinutePaint.setARGB(255, 0, 0, 0);
+			mMinutePaint.setStrokeWidth(10.f);
+			mMinutePaint.setAntiAlias(true);
+			mMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
 
-            mSecondPaint = new Paint();
-            mSecondPaint.setARGB(255, 255, 0, 0);
-            mSecondPaint.setStrokeWidth(2.f);
-            mSecondPaint.setAntiAlias(true);
-            mSecondPaint.setStrokeCap(Paint.Cap.ROUND);
+			mSecondPaint = new Paint();
+			mSecondPaint.setARGB(255, 255, 0, 0);
+			mSecondPaint.setStrokeWidth(3.f);
+			mSecondPaint.setAntiAlias(true);
+			mSecondPaint.setStrokeCap(Paint.Cap.ROUND);
 
-            mTickPaint = new Paint();
-            mTickPaint.setARGB(100, 255, 255, 255);
-            mTickPaint.setStrokeWidth(2.f);
-            mTickPaint.setAntiAlias(true);
+			mTickPaint = new Paint();
+			mTickPaint.setARGB(100, 255, 255, 255);
+			mTickPaint.setStrokeWidth(3.f);
+			mTickPaint.setAntiAlias(true);
 
             mTime = new Time();
         }
@@ -196,17 +196,17 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             float centerY = height / 2f;
 
             // Draw the ticks.
-            float innerTickRadius = centerX - 10;
-            float outerTickRadius = centerX;
-            for (int tickIndex = 0; tickIndex < 12; tickIndex++) {
-                float tickRot = (float) (tickIndex * Math.PI * 2 / 12);
-                float innerX = (float) Math.sin(tickRot) * innerTickRadius;
-                float innerY = (float) -Math.cos(tickRot) * innerTickRadius;
-                float outerX = (float) Math.sin(tickRot) * outerTickRadius;
-                float outerY = (float) -Math.cos(tickRot) * outerTickRadius;
-                canvas.drawLine(centerX + innerX, centerY + innerY,
-                        centerX + outerX, centerY + outerY, mTickPaint);
-            }
+//            float innerTickRadius = centerX - 10;
+//            float outerTickRadius = centerX;
+//            for (int tickIndex = 0; tickIndex < 12; tickIndex++) {
+//                float tickRot = (float) (tickIndex * Math.PI * 2 / 12);
+//                float innerX = (float) Math.sin(tickRot) * innerTickRadius;
+//                float innerY = (float) -Math.cos(tickRot) * innerTickRadius;
+//                float outerX = (float) Math.sin(tickRot) * outerTickRadius;
+//                float outerY = (float) -Math.cos(tickRot) * outerTickRadius;
+//                canvas.drawLine(centerX + innerX, centerY + innerY,
+//                        centerX + outerX, centerY + outerY, mTickPaint);
+//            }
 
             float seconds = mTime.second + milliseconds / 1000f;
             float secRot = seconds / 30f * (float) Math.PI;
@@ -214,23 +214,38 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             float minRot = minutes / 30f * (float) Math.PI;
             float hrRot = ((mTime.hour + (minutes / 60f)) / 6f ) * (float) Math.PI;
 
-            float secLength = centerX - 20;
-            float minLength = centerX - 40;
-            float hrLength = centerX - 80;
+			float secLength = centerX - 55;
+			float minLength = centerX - 25;
+			float hrLength = centerX - 70;
+
+			float hrX = (float) Math.sin(hrRot) * hrLength;
+			float hrY = (float) -Math.cos(hrRot) * hrLength;
+			float s_hrX = (float) Math.sin(hrRot) * 20;
+			float s_hrY = (float) -Math.cos(hrRot) * 20;
+			canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mHourPaint);
+//			canvas.drawLine(centerX, centerY, centerX + hrX, centerY + hrY, mHourPaint);
+
+			float minX = (float) Math.sin(minRot) * minLength;
+			float minY = (float) -Math.cos(minRot) * minLength;
+			float s_minX = (float) Math.sin(minRot) * 20;
+			float s_minY = (float) -Math.cos(minRot) * 20;
+			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
+//			canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
 
             if (!isInAmbientMode()) {
                 float secX = (float) Math.sin(secRot) * secLength;
                 float secY = (float) -Math.cos(secRot) * secLength;
-                canvas.drawLine(centerX, centerY, centerX + secX, centerY + secY, mSecondPaint);
-            }
-
-            float minX = (float) Math.sin(minRot) * minLength;
-            float minY = (float) -Math.cos(minRot) * minLength;
-            canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
-
-            float hrX = (float) Math.sin(hrRot) * hrLength;
-            float hrY = (float) -Math.cos(hrRot) * hrLength;
-            canvas.drawLine(centerX, centerY, centerX + hrX, centerY + hrY, mHourPaint);
+				float s_secX = (float) Math.sin(secRot) * 30;
+				float s_secY = (float) -Math.cos(secRot) * 30;
+				canvas.drawLine(centerX - s_secX, centerY - s_secY, centerX + secX, centerY + secY, mSecondPaint);
+				canvas.drawCircle(centerX + secX, centerY + secY, 10, mSecondPaint);
+				canvas.drawCircle(centerX, centerY, 4, mSecondPaint);
+//                canvas.drawLine(centerX, centerY, centerX + secX, centerY + secY, mSecondPaint);
+            }else{
+//				canvas.drawLine(centerX, centerY + 30, centerX, centerY - secLength, mSecondPaint);
+//				canvas.drawCircle(centerX, centerY - secLength, 10, mSecondPaint);
+				canvas.drawCircle(centerX, centerY, 4, mTickPaint);
+			}
 
             // Draw every frame as long as we're visible and in interactive mode.
             if (isVisible() && !isInAmbientMode()) {
