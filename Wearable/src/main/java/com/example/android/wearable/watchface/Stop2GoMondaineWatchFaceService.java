@@ -89,7 +89,9 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(Stop2GoMondaineWatchFaceService.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
 					.setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
-					.setHotwordIndicatorGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL)
+					.setHotwordIndicatorGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL)
+					.setViewProtection(WatchFaceStyle.PROTECT_HOTWORD_INDICATOR|WatchFaceStyle.PROTECT_STATUS_BAR)
+					.setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_TRANSLUCENT)
 					.setShowSystemUiTime(false)
 					.build());
 

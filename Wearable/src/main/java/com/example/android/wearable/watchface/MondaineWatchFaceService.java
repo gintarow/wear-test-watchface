@@ -120,6 +120,8 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(MondaineWatchFaceService.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
 					.setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
+					.setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_TRANSLUCENT)
+					.setViewProtection(WatchFaceStyle.PROTECT_STATUS_BAR)
 					.setShowSystemUiTime(false)
 					.build());
 
