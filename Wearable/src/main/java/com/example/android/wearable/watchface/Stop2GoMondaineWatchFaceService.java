@@ -33,6 +33,7 @@ import android.support.wearable.watchface.WatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.SurfaceHolder;
 
 import java.util.TimeZone;
@@ -86,10 +87,11 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             super.onCreate(holder);
 
             setWatchFaceStyle(new WatchFaceStyle.Builder(Stop2GoMondaineWatchFaceService.this)
-                    .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
-                    .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
-                    .setShowSystemUiTime(false)
-                    .build());
+					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
+					.setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
+					.setHotwordIndicatorGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL)
+					.setShowSystemUiTime(false)
+					.build());
 
             Resources resources = Stop2GoMondaineWatchFaceService.this.getResources();
             Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base);
@@ -114,7 +116,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			mSecondPaint.setStrokeCap(Paint.Cap.ROUND);
 
 			mTickPaint = new Paint();
-			mTickPaint.setARGB(100, 255, 255, 255);
+			mTickPaint.setARGB(192, 255, 255, 255);
 			mTickPaint.setStrokeWidth(3.f);
 			mTickPaint.setAntiAlias(true);
 
@@ -209,7 +211,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 //            }
 
             float seconds = mTime.second + milliseconds / 1000f;
-            float secRot = seconds / 30f * (float) Math.PI;
+			float secRot = 0;
             int minutes = mTime.minute;
             float minRot = minutes / 30f * (float) Math.PI;
             float hrRot = ((mTime.hour + (minutes / 60f)) / 6f ) * (float) Math.PI;
@@ -233,6 +235,9 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 //			canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
 
             if (!isInAmbientMode()) {
+				if(seconds<58) {	//stop2go
+					secRot = seconds / 29f * (float) Math.PI;
+				}
                 float secX = (float) Math.sin(secRot) * secLength;
                 float secY = (float) -Math.cos(secRot) * secLength;
 				float s_secX = (float) Math.sin(secRot) * 30;

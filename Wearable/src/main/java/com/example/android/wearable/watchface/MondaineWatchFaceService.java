@@ -147,7 +147,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
             mSecondPaint.setStrokeCap(Paint.Cap.ROUND);
 
             mTickPaint = new Paint();
-            mTickPaint.setARGB(100, 255, 255, 255);
+            mTickPaint.setARGB(192, 255, 255, 255);
             mTickPaint.setStrokeWidth(3.f);
             mTickPaint.setAntiAlias(true);
 
