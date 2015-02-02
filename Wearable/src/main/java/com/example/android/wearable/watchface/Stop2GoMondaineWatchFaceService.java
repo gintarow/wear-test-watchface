@@ -48,18 +48,22 @@ import java.util.TimeZone;
 public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
     private static final String TAG = "SweepWatchFaceService";
 
+//	private static final long INTERACTIVE_UPDATE_RATE_MS = TimeUnit.SECONDS.toMillis(1);
+
     @Override
     public Engine onCreateEngine() {
         return new Engine();
     }
 
     private class Engine extends CanvasWatchFaceService.Engine {
+//		static final int MSG_UPDATE_TIME = 0;
         Paint mHourPaint;
         Paint mMinutePaint;
         Paint mSecondPaint;
         Paint mTickPaint;
         boolean mMute;
         Time mTime;
+		int secShowCount=0;
 
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
@@ -69,6 +73,27 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             }
         };
         boolean mRegisteredTimeZoneReceiver = false;
+
+//		/** Handler to update the time once a second in interactive mode. */
+//		final Handler mUpdateTimeHandler = new Handler() {
+//			@Override
+//			public void handleMessage(Message message) {
+//				switch (message.what) {
+//					case MSG_UPDATE_TIME:
+//						if (Log.isLoggable(TAG, Log.VERBOSE)) {
+//							Log.v(TAG, "updating time");
+//						}
+//						invalidate();
+//						if (shouldTimerBeRunning()) {
+//							long timeMs = System.currentTimeMillis();
+//							long delayMs = INTERACTIVE_UPDATE_RATE_MS
+//									- (timeMs % INTERACTIVE_UPDATE_RATE_MS);
+//							mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
+//						}
+//						break;
+//				}
+//			}
+//		};
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
@@ -156,6 +181,9 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
                 mSecondPaint.setAntiAlias(antiAlias);
                 mTickPaint.setAntiAlias(antiAlias);
             }
+			if(inAmbientMode){
+				secShowCount = 120;
+			}
             invalidate();
         }
 
@@ -236,7 +264,8 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
 //			canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
 
-            if (!isInAmbientMode()) {
+//            if (!isInAmbientMode()) {
+            if (!isInAmbientMode()||isSecShow()) {
 				if(seconds<58) {	//stop2go
 					secRot = seconds / 29f * (float) Math.PI;
 				}
@@ -247,17 +276,21 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 				canvas.drawLine(centerX - s_secX, centerY - s_secY, centerX + secX, centerY + secY, mSecondPaint);
 				canvas.drawCircle(centerX + secX, centerY + secY, 10, mSecondPaint);
 				canvas.drawCircle(centerX, centerY, 4, mSecondPaint);
-//                canvas.drawLine(centerX, centerY, centerX + secX, centerY + secY, mSecondPaint);
+				if(secShowCount>0){
+					secShowCount--;
+				}
             }else{
-//				canvas.drawLine(centerX, centerY + 30, centerX, centerY - secLength, mSecondPaint);
-//				canvas.drawCircle(centerX, centerY - secLength, 10, mSecondPaint);
 				canvas.drawCircle(centerX, centerY, 4, mTickPaint);
 			}
 
             // Draw every frame as long as we're visible and in interactive mode.
-            if (isVisible() && !isInAmbientMode()) {
+//            if (isVisible() && !isInAmbientMode()) {
+            if (isVisible() && (!isInAmbientMode()||isSecShow())) {
                 invalidate();
-            }
+            }else if (secShowCount==0){
+				invalidate();
+				secShowCount--;
+			}
         }
 
         @Override
@@ -273,6 +306,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 
                 invalidate();
             } else {
+				secShowCount = -1;
                 unregisterReceiver();
             }
         }
@@ -293,5 +327,13 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             mRegisteredTimeZoneReceiver = false;
             Stop2GoMondaineWatchFaceService.this.unregisterReceiver(mTimeZoneReceiver);
         }
+
+		/**
+		 * Ambient Modeで秒針を表示するか
+		 * @return
+		 */
+		private boolean isSecShow(){
+			return secShowCount>0 ? true:false;
+		}
     }
 }

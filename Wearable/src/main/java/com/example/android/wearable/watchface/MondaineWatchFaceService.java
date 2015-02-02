@@ -70,6 +70,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
         Paint mTickPaint;
         boolean mMute;
         Time mTime;
+		int secShowCount = 0;
 
         /** Handler to update the time once a second in interactive mode. */
         final Handler mUpdateTimeHandler = new Handler() {
@@ -193,6 +194,9 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
                 mSecondPaint.setAntiAlias(antiAlias);
                 mTickPaint.setAntiAlias(antiAlias);
             }
+			if(inAmbientMode){
+				secShowCount = 8;
+			}
             invalidate();
 
             // Whether the timer should be running depends on whether we're in ambient mode (as well
@@ -269,7 +273,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
 			float s_minY = (float) -Math.cos(minRot) * 20;
 			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
 
-			if (!isInAmbientMode()) {
+			if (!isInAmbientMode()||secShowCount>0) {
 				float secX = (float) Math.sin(secRot) * secLength;
 				float secY = (float) -Math.cos(secRot) * secLength;
 				float s_secX = (float) Math.sin(secRot) * 30;
@@ -277,6 +281,9 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
 				canvas.drawLine(centerX - s_secX, centerY - s_secY, centerX + secX, centerY + secY, mSecondPaint);
 				canvas.drawCircle(centerX + secX, centerY + secY, 10, mSecondPaint);
 				canvas.drawCircle(centerX, centerY, 4, mSecondPaint);
+				if(secShowCount>0){
+					secShowCount--;
+				}
 			}else{
 				canvas.drawCircle(centerX, centerY, 4, mTickPaint);
 			}
@@ -296,6 +303,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
                 mTime.clear(TimeZone.getDefault().getID());
                 mTime.setToNow();
             } else {
+				secShowCount = 0;
                 unregisterReceiver();
             }
 
@@ -340,9 +348,17 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
          * only run when we're visible and in interactive mode.
          */
         private boolean shouldTimerBeRunning() {
-            return isVisible() && !isInAmbientMode();
-//			return isVisible();			//ambientmodeでも秒針動く
+//            return isVisible() && !isInAmbientMode();
+			return isVisible() && (!isInAmbientMode() || isSecShow());			//ambientmodeでも5秒間秒針動く
         }
+
+		/**
+		 * Ambient Modeで秒針を表示するか
+		 * @return
+		 */
+		private boolean isSecShow(){
+			return secShowCount>0 ? true:false;
+		}
 
     }
 }
