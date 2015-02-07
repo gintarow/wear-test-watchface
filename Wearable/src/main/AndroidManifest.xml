@@ -79,8 +79,8 @@
 		</service>
 
 		<service
-			android:name=".Stop2GoMondaineWatchFaceService"
-			android:label="@string/stop2go_name"
+			android:name=".Stop2GoWhiteWatchFaceService"
+			android:label="@string/stop2go_w_name"
 			android:permission="android.permission.BIND_WALLPAPER" >
 			<meta-data
 				android:name="android.service.wallpaper"
@@ -100,47 +100,69 @@
 			</intent-filter>
 		</service>
 
-        <service
-                android:name=".SweepWatchFaceService"
-                android:label="@string/sweep_name"
-                android:permission="android.permission.BIND_WALLPAPER" >
-            <meta-data
-                    android:name="android.service.wallpaper"
-                    android:resource="@xml/watch_face" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.preview"
-                    android:resource="@drawable/preview_analog" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.preview_circular"
-                    android:resource="@drawable/preview_analog_circular" />
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
+		<service
+			android:name=".Stop2GoAmbentBlackWatchFaceService"
+			android:label="@string/stop2go_ab_name"
+			android:permission="android.permission.BIND_WALLPAPER" >
+			<meta-data
+				android:name="android.service.wallpaper"
+				android:resource="@xml/watch_face" />
+			<meta-data
+				android:name="com.google.android.wearable.watchface.preview"
+				android:resource="@drawable/preview_mondaine" />
+			<meta-data
+				android:name="com.google.android.wearable.watchface.preview_circular"
+				android:resource="@drawable/preview_mondaine_circular" />
+			<meta-data
+				android:name="com.google.android.wearable.watchface.companionConfigurationAction"
+				android:value="com.example.android.wearable.watchface.CONFIG_ANALOG" />
+			<intent-filter>
+				<action android:name="android.service.wallpaper.WallpaperService" />
+				<category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+			</intent-filter>
+		</service>
 
-        <service
-                android:name=".TiltWatchFaceService"
-                android:label="@string/tilt_name"
-                android:permission="android.permission.BIND_WALLPAPER" >
-            <meta-data
-                    android:name="android.service.wallpaper"
-                    android:resource="@xml/watch_face" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.preview"
-                    android:resource="@drawable/preview_tilt" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.preview_circular"
-                    android:resource="@drawable/preview_tilt_circular" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.companionConfigurationAction"
-                    android:value="com.example.android.wearable.watchface.CONFIG_TILT" />
+        <!--<service-->
+                <!--android:name=".SweepWatchFaceService"-->
+                <!--android:label="@string/sweep_name"-->
+                <!--android:permission="android.permission.BIND_WALLPAPER" >-->
+            <!--<meta-data-->
+                    <!--android:name="android.service.wallpaper"-->
+                    <!--android:resource="@xml/watch_face" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.preview"-->
+                    <!--android:resource="@drawable/preview_analog" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.preview_circular"-->
+                    <!--android:resource="@drawable/preview_analog_circular" />-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.service.wallpaper.WallpaperService" />-->
+                <!--<category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
+        <!--<service-->
+                <!--android:name=".TiltWatchFaceService"-->
+                <!--android:label="@string/tilt_name"-->
+                <!--android:permission="android.permission.BIND_WALLPAPER" >-->
+            <!--<meta-data-->
+                    <!--android:name="android.service.wallpaper"-->
+                    <!--android:resource="@xml/watch_face" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.preview"-->
+                    <!--android:resource="@drawable/preview_tilt" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.preview_circular"-->
+                    <!--android:resource="@drawable/preview_tilt_circular" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.companionConfigurationAction"-->
+                    <!--android:value="com.example.android.wearable.watchface.CONFIG_TILT" />-->
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.service.wallpaper.WallpaperService" />-->
+                <!--<category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
         <!--<service-->
                 <!--android:name=".CardBoundsWatchFaceService"-->
@@ -164,44 +186,44 @@
             <!--</intent-filter>-->
         <!--</service>-->
 
-        <service
-                android:name=".DigitalWatchFaceService"
-                android:label="@string/digital_name"
-                android:permission="android.permission.BIND_WALLPAPER" >
-            <meta-data
-                    android:name="android.service.wallpaper"
-                    android:resource="@xml/watch_face" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.preview"
-                    android:resource="@drawable/preview_digital" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.preview_circular"
-                    android:resource="@drawable/preview_digital_circular" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.companionConfigurationAction"
-                    android:value="com.example.android.wearable.watchface.CONFIG_DIGITAL" />
-            <meta-data
-                    android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                    android:value="com.example.android.wearable.watchface.CONFIG_DIGITAL" />
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
+        <!--<service-->
+                <!--android:name=".DigitalWatchFaceService"-->
+                <!--android:label="@string/digital_name"-->
+                <!--android:permission="android.permission.BIND_WALLPAPER" >-->
+            <!--<meta-data-->
+                    <!--android:name="android.service.wallpaper"-->
+                    <!--android:resource="@xml/watch_face" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.preview"-->
+                    <!--android:resource="@drawable/preview_digital" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.preview_circular"-->
+                    <!--android:resource="@drawable/preview_digital_circular" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.companionConfigurationAction"-->
+                    <!--android:value="com.example.android.wearable.watchface.CONFIG_DIGITAL" />-->
+            <!--<meta-data-->
+                    <!--android:name="com.google.android.wearable.watchface.wearableConfigurationAction"-->
+                    <!--android:value="com.example.android.wearable.watchface.CONFIG_DIGITAL" />-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.service.wallpaper.WallpaperService" />-->
+                <!--<category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
         <!-- All intent-filters for config actions must include the categories
             com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION
             and android.intent.category.DEFAULT. -->
 
-        <activity
-                android:name=".DigitalWatchFaceWearableConfigActivity"
-                android:label="@string/digital_config_name">
-            <intent-filter>
-                <action android:name="com.example.android.wearable.watchface.CONFIG_DIGITAL" />
-                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <!--<activity-->
+                <!--android:name=".DigitalWatchFaceWearableConfigActivity"-->
+                <!--android:label="@string/digital_config_name">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.example.android.wearable.watchface.CONFIG_DIGITAL" />-->
+                <!--<category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
 
         <!--<service-->
                 <!--android:name=".CalendarWatchFaceService"-->
@@ -222,11 +244,11 @@
             <!--</intent-filter>-->
         <!--</service>-->
 
-        <service android:name=".DigitalWatchFaceConfigListenerService">
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
-        </service>
+        <!--<service android:name=".DigitalWatchFaceConfigListenerService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.gms.wearable.BIND_LISTENER" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
         <meta-data
                 android:name="com.google.android.gms.version"

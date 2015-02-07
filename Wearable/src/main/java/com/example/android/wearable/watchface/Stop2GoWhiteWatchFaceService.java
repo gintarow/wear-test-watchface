@@ -43,9 +43,9 @@ import java.util.TimeZone;
  * On devices with low-bit ambient mode, the hands are drawn without anti-aliasing in ambient mode.
  * The watch face is drawn with less contrast in mute mode.
  *
- * {@link com.example.android.wearable.watchface.AnalogWatchFaceService} is similar but has a ticking second hand.
+ * {@link AnalogWatchFaceService} is similar but has a ticking second hand.
  */
-public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
+public class Stop2GoWhiteWatchFaceService extends CanvasWatchFaceService {
     private static final String TAG = "SweepWatchFaceService";
 
 	private static final int SHOW_SEC_COUNT_DEFAULT = 150;		//フレーム数？
@@ -56,13 +56,10 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
     }
 
     private class Engine extends CanvasWatchFaceService.Engine {
-//		static final int MSG_UPDATE_TIME = 0;
         Paint mHourPaint;
         Paint mMinutePaint;
         Paint mSecondPaint;
         Paint mTickPaint;
-		Paint mAmbientHourPaint;
-		Paint mAmbientMinutePaint;
         boolean mMute;
         Time mTime;
 		int secShowCount=0;
@@ -84,8 +81,6 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 
         Bitmap mBackgroundBitmap;
         Bitmap mBackgroundScaledBitmap;
-		Bitmap mAmbientBackgroundBitmap;
-		Bitmap mAmbientBackgroundScaledBitmap;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -94,7 +89,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             }
             super.onCreate(holder);
 
-            setWatchFaceStyle(new WatchFaceStyle.Builder(Stop2GoMondaineWatchFaceService.this)
+            setWatchFaceStyle(new WatchFaceStyle.Builder(Stop2GoWhiteWatchFaceService.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
 					.setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
 					.setHotwordIndicatorGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL)
@@ -103,10 +98,9 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 					.setShowSystemUiTime(false)
 					.build());
 
-            Resources resources = Stop2GoMondaineWatchFaceService.this.getResources();
+            Resources resources = Stop2GoWhiteWatchFaceService.this.getResources();
             Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base_wh_320);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
-			mAmbientBackgroundBitmap = ((BitmapDrawable)resources.getDrawable(R.drawable.mondaine_base_bk_320)).getBitmap();
 
 			mHourPaint = new Paint();
 			mHourPaint.setARGB(255, 0, 0, 0);
@@ -114,23 +108,11 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			mHourPaint.setAntiAlias(true);
 			mHourPaint.setStrokeCap(Paint.Cap.SQUARE);
 
-			mAmbientHourPaint = new Paint();
-			mAmbientHourPaint.setARGB(255,255,255,255);
-			mAmbientHourPaint.setStrokeWidth(12.f);
-			mAmbientHourPaint.setAntiAlias(true);
-			mAmbientHourPaint.setStrokeCap(Paint.Cap.SQUARE);
-
 			mMinutePaint = new Paint();
 			mMinutePaint.setARGB(255, 0, 0, 0);
 			mMinutePaint.setStrokeWidth(10.f);
 			mMinutePaint.setAntiAlias(true);
 			mMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
-
-			mAmbientMinutePaint = new Paint();
-			mAmbientMinutePaint.setARGB(255,255,255,255);
-			mAmbientMinutePaint.setStrokeWidth(10.f);
-			mAmbientMinutePaint.setAntiAlias(true);
-			mAmbientMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
 
 			mSecondPaint = new Paint();
 			mSecondPaint.setARGB(255, 255, 0, 0);
@@ -172,10 +154,8 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             }
             if (mLowBitAmbient) {
                 boolean antiAlias = !inAmbientMode;
-//                mHourPaint.setAntiAlias(antiAlias);
-                mAmbientHourPaint.setAntiAlias(antiAlias);
-//                mMinutePaint.setAntiAlias(antiAlias);
-                mAmbientMinutePaint.setAntiAlias(antiAlias);
+                mHourPaint.setAntiAlias(antiAlias);
+                mMinutePaint.setAntiAlias(antiAlias);
                 mSecondPaint.setAntiAlias(antiAlias);
                 mTickPaint.setAntiAlias(antiAlias);
             }
@@ -192,9 +172,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             if (mMute != inMuteMode) {
                 mMute = inMuteMode;
                 mHourPaint.setAlpha(inMuteMode ? 100 : 255);
-                mAmbientHourPaint.setAlpha(inMuteMode ? 100 : 255);
                 mMinutePaint.setAlpha(inMuteMode ? 100 : 255);
-                mAmbientMinutePaint.setAlpha(inMuteMode ? 100 : 255);
                 mSecondPaint.setAlpha(inMuteMode ? 80 : 255);
                 invalidate();
             }
@@ -212,7 +190,14 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             int width = bounds.width();
             int height = bounds.height();
 
-
+            // Draw the background, scaled to fit.
+            if (mBackgroundScaledBitmap == null
+                    || mBackgroundScaledBitmap.getWidth() != width
+                    || mBackgroundScaledBitmap.getHeight() != height) {
+                mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
+                        width, height, true /* filter */);
+            }
+            canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
 
             // Find the center. Ignore the window insets so that, on round watches with a
             // "chin", the watch face is centered on the entire screen, not just the usable
@@ -247,26 +232,18 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			float hrY = (float) -Math.cos(hrRot) * hrLength;
 			float s_hrX = (float) Math.sin(hrRot) * 20;
 			float s_hrY = (float) -Math.cos(hrRot) * 20;
-
+			canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mHourPaint);
+//			canvas.drawLine(centerX, centerY, centerX + hrX, centerY + hrY, mHourPaint);
 
 			float minX = (float) Math.sin(minRot) * minLength;
 			float minY = (float) -Math.cos(minRot) * minLength;
 			float s_minX = (float) Math.sin(minRot) * 20;
 			float s_minY = (float) -Math.cos(minRot) * 20;
-
+			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
+//			canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
 
 //            if (!isInAmbientMode()) {
             if (!isInAmbientMode()||isSecShow()) {
-				// Draw the background, scaled to fit.
-				if (mBackgroundScaledBitmap == null
-						|| mBackgroundScaledBitmap.getWidth() != width
-						|| mBackgroundScaledBitmap.getHeight() != height) {
-					mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
-							width, height, true /* filter */);
-				}
-				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
-				canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mHourPaint);
-				canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
 				if(seconds<58) {	//stop2go
 					secRot = seconds / 29f * (float) Math.PI;
 				}
@@ -281,16 +258,6 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 					secShowCount--;
 				}
             }else{
-				// Draw the background, scaled to fit.
-				if (mAmbientBackgroundScaledBitmap == null
-						|| mAmbientBackgroundScaledBitmap.getWidth() != width
-						|| mAmbientBackgroundScaledBitmap.getHeight() != height) {
-					mAmbientBackgroundScaledBitmap = Bitmap.createScaledBitmap(mAmbientBackgroundBitmap,
-							width, height, true /* filter */);
-				}
-				canvas.drawBitmap(mAmbientBackgroundScaledBitmap, 0, 0, null);
-				canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mAmbientHourPaint);
-				canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mAmbientMinutePaint);
 				canvas.drawCircle(centerX, centerY, 4, mTickPaint);
 			}
 
@@ -328,7 +295,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             }
             mRegisteredTimeZoneReceiver = true;
             IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
-            Stop2GoMondaineWatchFaceService.this.registerReceiver(mTimeZoneReceiver, filter);
+            Stop2GoWhiteWatchFaceService.this.registerReceiver(mTimeZoneReceiver, filter);
         }
 
         private void unregisterReceiver() {
@@ -336,7 +303,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
                 return;
             }
             mRegisteredTimeZoneReceiver = false;
-            Stop2GoMondaineWatchFaceService.this.unregisterReceiver(mTimeZoneReceiver);
+            Stop2GoWhiteWatchFaceService.this.unregisterReceiver(mTimeZoneReceiver);
         }
 
 		/**
