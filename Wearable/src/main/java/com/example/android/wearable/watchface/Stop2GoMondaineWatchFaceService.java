@@ -56,7 +56,6 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
     }
 
     private class Engine extends CanvasWatchFaceService.Engine {
-//		static final int MSG_UPDATE_TIME = 0;
         Paint mHourPaint;
         Paint mMinutePaint;
         Paint mSecondPaint;
@@ -73,27 +72,6 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             }
         };
         boolean mRegisteredTimeZoneReceiver = false;
-
-//		/** Handler to update the time once a second in interactive mode. */
-//		final Handler mUpdateTimeHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message message) {
-//				switch (message.what) {
-//					case MSG_UPDATE_TIME:
-//						if (Log.isLoggable(TAG, Log.VERBOSE)) {
-//							Log.v(TAG, "updating time");
-//						}
-//						invalidate();
-//						if (shouldTimerBeRunning()) {
-//							long timeMs = System.currentTimeMillis();
-//							long delayMs = INTERACTIVE_UPDATE_RATE_MS
-//									- (timeMs % INTERACTIVE_UPDATE_RATE_MS);
-//							mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
-//						}
-//						break;
-//				}
-//			}
-//		};
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
