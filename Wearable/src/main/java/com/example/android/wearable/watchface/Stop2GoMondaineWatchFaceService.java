@@ -85,7 +85,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
         Bitmap mBackgroundBitmap;
         Bitmap mBackgroundScaledBitmap;
 		Bitmap mAmbientBackgroundBitmap;
-		Bitmap mAmbientBackgroundScaledbitmap;
+		Bitmap mAmbientBackgroundScaledBitmap;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -115,7 +115,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			mHourPaint.setStrokeCap(Paint.Cap.SQUARE);
 
 			mAmbientHourPaint = new Paint();
-			mAmbientHourPaint.setARGB(100,255,255,255);
+			mAmbientHourPaint.setARGB(255,255,255,255);
 			mAmbientHourPaint.setStrokeWidth(12.f);
 			mAmbientHourPaint.setAntiAlias(true);
 			mAmbientHourPaint.setStrokeCap(Paint.Cap.SQUARE);
@@ -127,7 +127,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			mMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
 
 			mAmbientMinutePaint = new Paint();
-			mAmbientMinutePaint.setARGB(100,255,255,255);
+			mAmbientMinutePaint.setARGB(255,255,255,255);
 			mAmbientMinutePaint.setStrokeWidth(10.f);
 			mAmbientMinutePaint.setAntiAlias(true);
 			mAmbientMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
@@ -139,7 +139,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			mSecondPaint.setStrokeCap(Paint.Cap.ROUND);
 
 			mTickPaint = new Paint();
-			mTickPaint.setARGB(192, 255, 255, 255);
+			mTickPaint.setARGB(255, 192, 192, 192);
 			mTickPaint.setStrokeWidth(3.f);
 			mTickPaint.setAntiAlias(true);
 
@@ -212,14 +212,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             int width = bounds.width();
             int height = bounds.height();
 
-            // Draw the background, scaled to fit.
-            if (mBackgroundScaledBitmap == null
-                    || mBackgroundScaledBitmap.getWidth() != width
-                    || mBackgroundScaledBitmap.getHeight() != height) {
-                mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
-                        width, height, true /* filter */);
-            }
-            canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
+
 
             // Find the center. Ignore the window insets so that, on round watches with a
             // "chin", the watch face is centered on the entire screen, not just the usable
@@ -254,18 +247,26 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			float hrY = (float) -Math.cos(hrRot) * hrLength;
 			float s_hrX = (float) Math.sin(hrRot) * 20;
 			float s_hrY = (float) -Math.cos(hrRot) * 20;
-			canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mHourPaint);
-//			canvas.drawLine(centerX, centerY, centerX + hrX, centerY + hrY, mHourPaint);
+
 
 			float minX = (float) Math.sin(minRot) * minLength;
 			float minY = (float) -Math.cos(minRot) * minLength;
 			float s_minX = (float) Math.sin(minRot) * 20;
 			float s_minY = (float) -Math.cos(minRot) * 20;
-			canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
-//			canvas.drawLine(centerX, centerY, centerX + minX, centerY + minY, mMinutePaint);
+
 
 //            if (!isInAmbientMode()) {
             if (!isInAmbientMode()||isSecShow()) {
+				// Draw the background, scaled to fit.
+				if (mBackgroundScaledBitmap == null
+						|| mBackgroundScaledBitmap.getWidth() != width
+						|| mBackgroundScaledBitmap.getHeight() != height) {
+					mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
+							width, height, true /* filter */);
+				}
+				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
+				canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mHourPaint);
+				canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mMinutePaint);
 				if(seconds<58) {	//stop2go
 					secRot = seconds / 29f * (float) Math.PI;
 				}
@@ -280,6 +281,16 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 					secShowCount--;
 				}
             }else{
+				// Draw the background, scaled to fit.
+				if (mAmbientBackgroundScaledBitmap == null
+						|| mAmbientBackgroundScaledBitmap.getWidth() != width
+						|| mAmbientBackgroundScaledBitmap.getHeight() != height) {
+					mAmbientBackgroundScaledBitmap = Bitmap.createScaledBitmap(mAmbientBackgroundBitmap,
+							width, height, true /* filter */);
+				}
+				canvas.drawBitmap(mAmbientBackgroundScaledBitmap, 0, 0, null);
+				canvas.drawLine(centerX - s_hrX, centerY - s_hrY, centerX + hrX, centerY + hrY, mAmbientHourPaint);
+				canvas.drawLine(centerX - s_minX, centerY - s_minY, centerX + minX, centerY + minY, mAmbientMinutePaint);
 				canvas.drawCircle(centerX, centerY, 4, mTickPaint);
 			}
 
