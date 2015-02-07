@@ -61,6 +61,8 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
         Paint mMinutePaint;
         Paint mSecondPaint;
         Paint mTickPaint;
+		Paint mAmbientHourPaint;
+		Paint mAmbientMinutePaint;
         boolean mMute;
         Time mTime;
 		int secShowCount=0;
@@ -74,27 +76,6 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
         };
         boolean mRegisteredTimeZoneReceiver = false;
 
-//		/** Handler to update the time once a second in interactive mode. */
-//		final Handler mUpdateTimeHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message message) {
-//				switch (message.what) {
-//					case MSG_UPDATE_TIME:
-//						if (Log.isLoggable(TAG, Log.VERBOSE)) {
-//							Log.v(TAG, "updating time");
-//						}
-//						invalidate();
-//						if (shouldTimerBeRunning()) {
-//							long timeMs = System.currentTimeMillis();
-//							long delayMs = INTERACTIVE_UPDATE_RATE_MS
-//									- (timeMs % INTERACTIVE_UPDATE_RATE_MS);
-//							mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
-//						}
-//						break;
-//				}
-//			}
-//		};
-
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
          * disable anti-aliasing in ambient mode.
@@ -103,6 +84,8 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 
         Bitmap mBackgroundBitmap;
         Bitmap mBackgroundScaledBitmap;
+		Bitmap mAmbientBackgroundBitmap;
+		Bitmap mAmbientBackgroundScaledbitmap;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -123,6 +106,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             Resources resources = Stop2GoMondaineWatchFaceService.this.getResources();
             Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base_wh_320);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
+			mAmbientBackgroundBitmap = ((BitmapDrawable)resources.getDrawable(R.drawable.mondaine_base_bk_320)).getBitmap();
 
 			mHourPaint = new Paint();
 			mHourPaint.setARGB(255, 0, 0, 0);
@@ -130,11 +114,23 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 			mHourPaint.setAntiAlias(true);
 			mHourPaint.setStrokeCap(Paint.Cap.SQUARE);
 
+			mAmbientHourPaint = new Paint();
+			mAmbientHourPaint.setARGB(100,255,255,255);
+			mAmbientHourPaint.setStrokeWidth(12.f);
+			mAmbientHourPaint.setAntiAlias(true);
+			mAmbientHourPaint.setStrokeCap(Paint.Cap.SQUARE);
+
 			mMinutePaint = new Paint();
 			mMinutePaint.setARGB(255, 0, 0, 0);
 			mMinutePaint.setStrokeWidth(10.f);
 			mMinutePaint.setAntiAlias(true);
 			mMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
+
+			mAmbientMinutePaint = new Paint();
+			mAmbientMinutePaint.setARGB(100,255,255,255);
+			mAmbientMinutePaint.setStrokeWidth(10.f);
+			mAmbientMinutePaint.setAntiAlias(true);
+			mAmbientMinutePaint.setStrokeCap(Paint.Cap.SQUARE);
 
 			mSecondPaint = new Paint();
 			mSecondPaint.setARGB(255, 255, 0, 0);
@@ -176,8 +172,10 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             }
             if (mLowBitAmbient) {
                 boolean antiAlias = !inAmbientMode;
-                mHourPaint.setAntiAlias(antiAlias);
-                mMinutePaint.setAntiAlias(antiAlias);
+//                mHourPaint.setAntiAlias(antiAlias);
+                mAmbientHourPaint.setAntiAlias(antiAlias);
+//                mMinutePaint.setAntiAlias(antiAlias);
+                mAmbientMinutePaint.setAntiAlias(antiAlias);
                 mSecondPaint.setAntiAlias(antiAlias);
                 mTickPaint.setAntiAlias(antiAlias);
             }
@@ -194,7 +192,9 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
             if (mMute != inMuteMode) {
                 mMute = inMuteMode;
                 mHourPaint.setAlpha(inMuteMode ? 100 : 255);
+                mAmbientHourPaint.setAlpha(inMuteMode ? 100 : 255);
                 mMinutePaint.setAlpha(inMuteMode ? 100 : 255);
+                mAmbientMinutePaint.setAlpha(inMuteMode ? 100 : 255);
                 mSecondPaint.setAlpha(inMuteMode ? 80 : 255);
                 invalidate();
             }
