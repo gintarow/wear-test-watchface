@@ -457,18 +457,23 @@ containing a value of this type.
         public static final int mondaine_base=0x7f020074;
         public static final int mondaine_base_bk_320=0x7f020075;
         public static final int mondaine_base_wh_320=0x7f020076;
-        public static final int preview_analog=0x7f020077;
-        public static final int preview_analog_circular=0x7f020078;
-        public static final int preview_calendar=0x7f020079;
-        public static final int preview_calendar_circular=0x7f02007a;
-        public static final int preview_card_bounds=0x7f02007b;
-        public static final int preview_card_bounds_circular=0x7f02007c;
-        public static final int preview_digital=0x7f02007d;
-        public static final int preview_digital_circular=0x7f02007e;
-        public static final int preview_mondaine=0x7f02007f;
-        public static final int preview_mondaine_circular=0x7f020080;
-        public static final int preview_tilt=0x7f020081;
-        public static final int preview_tilt_circular=0x7f020082;
+        public static final int pika_01_1=0x7f020077;
+        public static final int pika_01_2=0x7f020078;
+        public static final int pika_01_3=0x7f020079;
+        public static final int pika_bg=0x7f02007a;
+        public static final int preview_analog=0x7f02007b;
+        public static final int preview_analog_circular=0x7f02007c;
+        public static final int preview_calendar=0x7f02007d;
+        public static final int preview_calendar_circular=0x7f02007e;
+        public static final int preview_card_bounds=0x7f02007f;
+        public static final int preview_card_bounds_circular=0x7f020080;
+        public static final int preview_digital=0x7f020081;
+        public static final int preview_digital_circular=0x7f020082;
+        public static final int preview_mondaine=0x7f020083;
+        public static final int preview_mondaine_circular=0x7f020084;
+        public static final int preview_pika=0x7f020085;
+        public static final int preview_tilt=0x7f020086;
+        public static final int preview_tilt_circular=0x7f020087;
     }
     public static final class id {
         public static final int action_error=0x7f0d0010;
@@ -559,11 +564,12 @@ containing a value of this type.
         public static final int digital_name=0x7f0b002a;
         public static final int digital_pm=0x7f0b002b;
         public static final int mondaine_name=0x7f0b002c;
-        public static final int stop2go_ab_name=0x7f0b002d;
-        public static final int stop2go_b_name=0x7f0b002e;
-        public static final int stop2go_w_name=0x7f0b002f;
-        public static final int sweep_name=0x7f0b0030;
-        public static final int tilt_name=0x7f0b0031;
+        public static final int pocket_pika_name=0x7f0b002d;
+        public static final int stop2go_ab_name=0x7f0b002e;
+        public static final int stop2go_b_name=0x7f0b002f;
+        public static final int stop2go_w_name=0x7f0b0030;
+        public static final int sweep_name=0x7f0b0031;
+        public static final int tilt_name=0x7f0b0032;
     }
     public static final class style {
         public static final int CardText=0x7f0c0000;
