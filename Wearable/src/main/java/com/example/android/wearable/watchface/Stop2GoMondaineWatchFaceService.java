@@ -287,9 +287,9 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 //            if (isVisible() && !isInAmbientMode()) {
             if (isVisible() && (!isInAmbientMode()||isSecShow())) {
                 invalidate();
-            }else if (secShowCount==0){
+            }else if (secShowCount==0){		//秒針を消す
 				invalidate();
-				secShowCount--;
+				secShowCount=-1;
 			}
         }
 
