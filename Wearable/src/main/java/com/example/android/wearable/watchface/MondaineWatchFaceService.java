@@ -127,8 +127,7 @@ public class MondaineWatchFaceService extends CanvasWatchFaceService {
 					.build());
 
             Resources resources = MondaineWatchFaceService.this.getResources();
-//            Drawable backgroundDrawable = resources.getDrawable(R.drawable.bg);
-            Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base);
+            Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base_wh_320);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
 
             mHourPaint = new Paint();

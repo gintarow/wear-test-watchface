@@ -455,18 +455,20 @@ containing a value of this type.
         public static final int ic_plusone_standard_off_client=0x7f020072;
         public static final int ic_plusone_tall_off_client=0x7f020073;
         public static final int mondaine_base=0x7f020074;
-        public static final int preview_analog=0x7f020075;
-        public static final int preview_analog_circular=0x7f020076;
-        public static final int preview_calendar=0x7f020077;
-        public static final int preview_calendar_circular=0x7f020078;
-        public static final int preview_card_bounds=0x7f020079;
-        public static final int preview_card_bounds_circular=0x7f02007a;
-        public static final int preview_digital=0x7f02007b;
-        public static final int preview_digital_circular=0x7f02007c;
-        public static final int preview_mondaine=0x7f02007d;
-        public static final int preview_mondaine_circular=0x7f02007e;
-        public static final int preview_tilt=0x7f02007f;
-        public static final int preview_tilt_circular=0x7f020080;
+        public static final int mondaine_base_bk_320=0x7f020075;
+        public static final int mondaine_base_wh_320=0x7f020076;
+        public static final int preview_analog=0x7f020077;
+        public static final int preview_analog_circular=0x7f020078;
+        public static final int preview_calendar=0x7f020079;
+        public static final int preview_calendar_circular=0x7f02007a;
+        public static final int preview_card_bounds=0x7f02007b;
+        public static final int preview_card_bounds_circular=0x7f02007c;
+        public static final int preview_digital=0x7f02007d;
+        public static final int preview_digital_circular=0x7f02007e;
+        public static final int preview_mondaine=0x7f02007f;
+        public static final int preview_mondaine_circular=0x7f020080;
+        public static final int preview_tilt=0x7f020081;
+        public static final int preview_tilt_circular=0x7f020082;
     }
     public static final class id {
         public static final int action_error=0x7f0d0010;

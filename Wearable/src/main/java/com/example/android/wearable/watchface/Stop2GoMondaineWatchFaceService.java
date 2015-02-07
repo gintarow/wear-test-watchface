@@ -48,7 +48,7 @@ import java.util.TimeZone;
 public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
     private static final String TAG = "SweepWatchFaceService";
 
-//	private static final long INTERACTIVE_UPDATE_RATE_MS = TimeUnit.SECONDS.toMillis(1);
+	private static final int SHOW_SEC_COUNT_DEFAULT = 150;		//フレーム数？
 
     @Override
     public Engine onCreateEngine() {
@@ -121,7 +121,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
 					.build());
 
             Resources resources = Stop2GoMondaineWatchFaceService.this.getResources();
-            Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base);
+            Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base_wh_320);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
 
 			mHourPaint = new Paint();
@@ -182,7 +182,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
                 mTickPaint.setAntiAlias(antiAlias);
             }
 			if(inAmbientMode){
-				secShowCount = 120;
+				secShowCount = SHOW_SEC_COUNT_DEFAULT;
 			}
             invalidate();
         }
@@ -329,7 +329,7 @@ public class Stop2GoMondaineWatchFaceService extends CanvasWatchFaceService {
         }
 
 		/**
-		 * Ambient Modeで秒針を表示するか
+		 * AmbientModeで秒針を表示するかを返す
 		 * @return
 		 */
 		private boolean isSecShow(){
