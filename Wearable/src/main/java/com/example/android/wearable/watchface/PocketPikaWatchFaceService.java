@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
  * and without seconds in mute mode.
  */
 public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
-    private static final String TAG = "DigitalWatchFaceService";
+    private static final String TAG = "PikaWatchFaceService";
 
     private static final Typeface BOLD_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
@@ -136,8 +136,14 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 		Bitmap mBackgroundBitmap;
 		Bitmap mBackgroundScaledBitmap;
+		Bitmap mPikaAnimeBitmap01_1;
+		Bitmap mPikaAnimeBitmap01_2;
+		Bitmap mPikaAnimeBitmap02_1;
+		Bitmap mPikaAnimeScalsedBitmap;
+		int choice = -1;
+
         Paint mBackgroundPaint;
-        Paint mHourPaint;
+		Paint mHourPaint;
         Paint mMinutePaint;
         Paint mSecondPaint;
         Paint mAmPmPaint;
@@ -182,8 +188,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
             mAmString = resources.getString(R.string.digital_am);
             mPmString = resources.getString(R.string.digital_pm);
 
-			Drawable backgroundDrawable = resources.getDrawable(R.drawable.preview_pika);
+			Drawable backgroundDrawable = resources.getDrawable(R.drawable.pika_bg);
 			mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
+			mPikaAnimeBitmap01_1 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_01_1)).getBitmap();
+			mPikaAnimeBitmap01_2 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_01_2)).getBitmap();
+			mPikaAnimeBitmap02_1 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_02_1)).getBitmap();
 
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(mInteractiveBackgroundColor);
@@ -327,6 +336,10 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
             adjustPaintColorToCurrentMode(mSecondPaint, mInteractiveSecondDigitsColor,
                     DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
 
+			if(inAmbientMode){
+				choice=-1;
+			}
+
             if (mLowBitAmbient) {
                 boolean antiAlias = !inAmbientMode;
                 mHourPaint.setAntiAlias(antiAlias);
@@ -440,7 +453,19 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 					mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
 							width, height, true /* filter */);
 				}
+				if(choice==-1||mPikaAnimeScalsedBitmap==null){
+					choice = (int)System.currentTimeMillis() % 2;	//ランダムで表示する画像を変える
+					switch(choice){
+						case 0:
+							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap01_1,width,height,true);
+							break;
+						case 1:
+							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap02_1,width,height,true);
+							break;
+					}
+				}
 				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
+				canvas.drawBitmap(mPikaAnimeScalsedBitmap, 0, 0, null);
 			}
 
             // Draw the hours.
