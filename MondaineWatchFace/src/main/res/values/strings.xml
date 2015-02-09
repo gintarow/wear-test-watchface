@@ -1,0 +1,8 @@
+<resources>
+	<string name="app_name">MondaineWatchFace</string>
+	<string name="mondaine_name">MONDAINE</string>
+	<string name="stop2go_w_name">Stop2Go(White)</string>
+	<string name="stop2go_b_name">Stop2Go(Black)</string>
+	<string name="stop2go_ab_name">Stop2Go(AmbientBlack)</string>
+
+</resources>
