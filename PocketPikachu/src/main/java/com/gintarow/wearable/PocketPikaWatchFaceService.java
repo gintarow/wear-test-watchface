@@ -139,8 +139,14 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		Bitmap mPikaAnimeBitmap01_1;
 		Bitmap mPikaAnimeBitmap01_2;
 		Bitmap mPikaAnimeBitmap02_1;
+		Bitmap mPikaAnimeBitmap02_2;
+		Bitmap mPikaAnimeBitmap02_3;
+		Bitmap mPikaAnimeBitmap02_4;
+		Bitmap mPikaAnimeBitmap03_1;
+		Bitmap mPikaAnimeBitmap03_2;
 		Bitmap mPikaAnimeScalsedBitmap;
 		int choice = -1;
+		int animecount = 0;
 
         Paint mBackgroundPaint;
 		Paint mHourPaint;
@@ -193,6 +199,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			mPikaAnimeBitmap01_1 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_01_1)).getBitmap();
 			mPikaAnimeBitmap01_2 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_01_2)).getBitmap();
 			mPikaAnimeBitmap02_1 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_02_1)).getBitmap();
+			mPikaAnimeBitmap02_2 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_02_2)).getBitmap();
+			mPikaAnimeBitmap02_3 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_02_3)).getBitmap();
+			mPikaAnimeBitmap02_4 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_02_4)).getBitmap();
+			mPikaAnimeBitmap03_1 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_03_1)).getBitmap();
+			mPikaAnimeBitmap03_2 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_03_2)).getBitmap();
 
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(mInteractiveBackgroundColor);
@@ -338,6 +349,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 			if(inAmbientMode){
 				choice=-1;
+				animecount=0;
 			}
 
             if (mLowBitAmbient) {
@@ -454,7 +466,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 							width, height, true /* filter */);
 				}
 				if(choice==-1||mPikaAnimeScalsedBitmap==null){
-					choice = (int)System.currentTimeMillis() % 2;	//ランダムで表示する画像を変える
+					choice = (int)System.currentTimeMillis() % 3;	//ランダムで表示するアニメを変える
 					switch(choice){
 						case 0:
 							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap01_1,width,height,true);
@@ -462,6 +474,46 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 						case 1:
 							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap02_1,width,height,true);
 							break;
+						case 2:
+							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap03_1,width,height,true);
+							break;
+					}
+					animecount=0;
+				}else{
+					animecount++;
+					if(choice==0){
+						switch(animecount%8){
+							case 1:case 2:case 3:case 0:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap01_1,width,height,true);
+								break;
+							case 5:case 6:case 7:case 4:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap01_2,width,height,true);
+								break;
+						}
+					}else if(choice==1){
+						switch (animecount%12){
+							case 0:case 1:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap02_1,width,height,true);
+								break;
+							case 2:case 3:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap02_2,width,height,true);
+								break;
+							case 4:case 6:case 8:case 10:case 11:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap02_3,width,height,true);
+								break;
+							case 5:case 7:case 9:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap02_4,width,height,true);
+								break;
+						}
+					}else if(choice==2){
+						switch(animecount%6){
+							case 0:case 1:case 2:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap03_1,width,height,true);
+								break;
+							case 3:case 4:case 5:
+								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap03_2,width,height,true);
+								break;
+						}
 					}
 				}
 				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
