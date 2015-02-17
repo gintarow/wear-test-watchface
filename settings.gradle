@@ -1,1 +1,1 @@
-include ':Application', ':Wearable', ':pocketpikachu', ':PocketPikachu', ':MondaineWatchFace'
+include ':Application', ':Wearable', ':MondaineWatchFace', 'PocketPikachuWatchFace'
