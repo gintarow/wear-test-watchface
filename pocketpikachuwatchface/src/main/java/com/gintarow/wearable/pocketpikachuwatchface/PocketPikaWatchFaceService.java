@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gintarow.wearable.pikachuwatchface;
+package com.gintarow.wearable.pocketpikachuwatchface;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -147,6 +147,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		Bitmap mPikaAnimeScalsedBitmap;
 		int choice = -1;
 		int animecount = 0;
+		int ambientanimecount = 0;
 
         Paint mBackgroundPaint;
 		Paint mHourPaint;
@@ -251,6 +252,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
                 mTime.setToNow();
             } else {
                 unregisterReceiver();
+				choice=-1;
+				ambientanimecount=0;
 
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                     Wearable.DataApi.removeListener(mGoogleApiClient, this);
@@ -347,9 +350,10 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
             adjustPaintColorToCurrentMode(mSecondPaint, mInteractiveSecondDigitsColor,
                     DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
 
-			if(inAmbientMode){
-				choice=-1;
-				animecount=0;
+			if(inAmbientMode&&choice!=-1) {
+				ambientanimecount = 18;
+			}else{
+				ambientanimecount=0;
 			}
 
             if (mLowBitAmbient) {
@@ -454,7 +458,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
             mShouldDrawColons = (System.currentTimeMillis() % 1000) < 500;
 
             // Draw the background.
-			if(isInAmbientMode()) {
+//			if(isInAmbientMode()) {
+			if(isInAmbientMode()&&ambientanimecount==0) {
+				choice=-1;
 				canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
 			}else{
 				int width = bounds.width();
@@ -466,7 +472,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 							width, height, true /* filter */);
 				}
 				if(choice==-1||mPikaAnimeScalsedBitmap==null){
-					choice = (int)System.currentTimeMillis() % 3;	//ランダムで表示するアニメを変える
+					choice = mTime.second % 3;	//ランダムで表示するアニメを変える
 					switch(choice){
 						case 0:
 							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap01_1,width,height,true);
@@ -476,6 +482,10 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 							break;
 						case 2:
 							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap03_1,width,height,true);
+							break;
+						default:
+							choice=0;
+							mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap01_1,width,height,true);
 							break;
 					}
 					animecount=0;
@@ -514,6 +524,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 								mPikaAnimeScalsedBitmap = Bitmap.createScaledBitmap(mPikaAnimeBitmap03_2,width,height,true);
 								break;
 						}
+					}
+					if(isInAmbientMode()){
+						ambientanimecount--;
 					}
 				}
 				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
@@ -572,7 +585,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
          * only run when we're visible and in interactive mode.
          */
         private boolean shouldTimerBeRunning() {
-            return isVisible() && !isInAmbientMode();
+//            return isVisible() && !isInAmbientMode();
+            return (isVisible() && !isInAmbientMode()) || (isInAmbientMode() && ambientanimecount!=0);
         }
 
         private void updateConfigDataItemAndUiOnStartup() {

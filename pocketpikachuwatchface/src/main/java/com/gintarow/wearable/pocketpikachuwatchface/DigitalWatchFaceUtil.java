@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.gintarow.wearable.pikachuwatchface;
+package com.gintarow.wearable.pocketpikachuwatchface;
 
 import android.graphics.Color;
 import android.net.Uri;
