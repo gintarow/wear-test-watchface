@@ -5,7 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/Application/Application.iml" filepath="$PROJECT_DIR$/Application/Application.iml" />
       <module fileurl="file://$PROJECT_DIR$/MondaineWatchFace/MondaineWatchFace.iml" filepath="$PROJECT_DIR$/MondaineWatchFace/MondaineWatchFace.iml" />
       <module fileurl="file://$PROJECT_DIR$/PocketPikachuWatchFace/PocketPikachuWatchFace.iml" filepath="$PROJECT_DIR$/PocketPikachuWatchFace/PocketPikachuWatchFace.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WatchFace.iml" filepath="$PROJECT_DIR$/WatchFace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Wear-WatchFace.iml" filepath="$PROJECT_DIR$/Wear-WatchFace.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WearWatchFace.iml" filepath="$PROJECT_DIR$/WearWatchFace.iml" />
       <module fileurl="file://$PROJECT_DIR$/Wearable/Wearable.iml" filepath="$PROJECT_DIR$/Wearable/Wearable.iml" />
     </modules>
   </component>
