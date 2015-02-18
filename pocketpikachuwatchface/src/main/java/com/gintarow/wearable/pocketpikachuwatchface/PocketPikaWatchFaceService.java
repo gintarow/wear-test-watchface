@@ -236,7 +236,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
         }
 
         @Override
-        public void onVisibilityChanged(boolean visible) {
+        public void onVisibilityChanged(boolean visible) {		//画面が消えた時は呼ばれないっぽい
             if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "onVisibilityChanged: " + visible);
             }
@@ -246,7 +246,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
                 mGoogleApiClient.connect();
 
                 registerReceiver();
-
+//				Log.d("Pika","visiblity true, count:"+ambientanimecount);
                 // Update time zone in case it changed while we weren't visible.
                 mTime.clear(TimeZone.getDefault().getID());
                 mTime.setToNow();
@@ -254,6 +254,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
                 unregisterReceiver();
 				choice=-1;
 				ambientanimecount=0;
+//				Log.d("Pika","visiblity false, count:"+ambientanimecount);
 
                 if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                     Wearable.DataApi.removeListener(mGoogleApiClient, this);
@@ -350,8 +351,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
             adjustPaintColorToCurrentMode(mSecondPaint, mInteractiveSecondDigitsColor,
                     DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
 
+//			Log.d("Pika","Amb "+inAmbientMode+", count:"+ambientanimecount);
 			if(inAmbientMode&&choice!=-1) {
-				ambientanimecount = 18;
+				ambientanimecount = 16;
 			}else{
 				ambientanimecount=0;
 			}
@@ -527,6 +529,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 					}
 					if(isInAmbientMode()){
 						ambientanimecount--;
+						if(ambientanimecount==0){
+							invalidate();	//再描画してアンビエントの画面にする
+						}
 					}
 				}
 				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
