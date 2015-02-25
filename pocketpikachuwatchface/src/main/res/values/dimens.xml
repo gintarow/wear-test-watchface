@@ -27,5 +27,8 @@
     <dimen name="content_padding_start">12dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="digital_text_size_step">30dp</dimen>
+	<dimen name="digital_y_offset_step">215dp</dimen>
+	<dimen name="digital_x_offset_step">110dp</dimen>
 
 </resources>

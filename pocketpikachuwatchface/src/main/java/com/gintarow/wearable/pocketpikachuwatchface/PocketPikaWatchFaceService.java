@@ -28,6 +28,10 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -78,13 +82,19 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 	 */
 	private static final long MUTE_UPDATE_RATE_MS = TimeUnit.MINUTES.toMillis(1);
 
+	/**
+	 * 歩数記録用
+	 */
+	static float mStepCount=0;
+	static float mPrevStepCount=0;
+
 	@Override
 	public Engine onCreateEngine() {
 		return new Engine();
 	}
 
 	private class Engine extends CanvasWatchFaceService.Engine implements DataApi.DataListener,
-			GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+			GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, SensorEventListener {
 		static final String COLON_STRING = ":";
 
 		/** Alpha value for drawing time when in mute mode. */
@@ -149,6 +159,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		int animecount = 0;
 		int ambientanimecount = 0;
 
+		Paint stepCountPaint;
+		Typeface typeface;
+		float XstepOffset;
+		float YstepOffset;
+
 		Paint mBackgroundPaint;
 		Paint mHourPaint;
 		Paint mMinutePaint;
@@ -173,6 +188,13 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS;
 
 		/**
+		 * Sensor
+		 */
+		SensorManager mSensorManager;
+		Sensor sensorStepCounter;
+
+
+		/**
 		 * Whether the display supports fewer bits for each color in ambient mode. When true, we
 		 * disable anti-aliasing in ambient mode.
 		 */
@@ -184,6 +206,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				Log.d(TAG, "onCreate");
 			}
 			super.onCreate(holder);
+
+			//センサー設定
+			mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+			sensorStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+			mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
 
 			setWatchFaceStyle(new WatchFaceStyle.Builder(PocketPikaWatchFaceService.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
@@ -205,6 +232,14 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			mPikaAnimeBitmap02_4 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_02_4)).getBitmap();
 			mPikaAnimeBitmap03_1 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_03_1)).getBitmap();
 			mPikaAnimeBitmap03_2 = ((BitmapDrawable)resources.getDrawable(R.drawable.pika_03_2)).getBitmap();
+
+			//歩数のフォント
+			stepCountPaint = new Paint();
+			typeface = Typeface.createFromAsset(getAssets(), "font/digital-7.ttf");
+//			stepCountPaint = createTextPaint(resources.getColor(R.color.black),typeface);
+			stepCountPaint.setTypeface(typeface);
+			stepCountPaint.setAntiAlias(true);
+
 
 			mBackgroundPaint = new Paint();
 			mBackgroundPaint.setColor(mInteractiveBackgroundColor);
@@ -246,6 +281,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				mGoogleApiClient.connect();
 
 				registerReceiver();
+				mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_UI);
 
 //				Log.d("Pika","visiblity true, count:"+ambientanimecount);
 				// Update time zone in case it changed while we weren't visible.
@@ -307,6 +343,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			mSecondPaint.setTextSize(textSize);
 			mAmPmPaint.setTextSize(amPmSize);
 			mColonPaint.setTextSize(textSize);
+			stepCountPaint.setTextSize(resources.getDimensionPixelSize(R.dimen.digital_text_size_step));
+			XstepOffset = resources.getDimension(R.dimen.digital_x_offset_step);
+			YstepOffset = resources.getDimension(R.dimen.digital_y_offset_step);
 
 			mColonWidth = mColonPaint.measureText(COLON_STRING);
 		}
@@ -366,7 +405,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				mSecondPaint.setAntiAlias(antiAlias);
 				mAmPmPaint.setAntiAlias(antiAlias);
 				mColonPaint.setAntiAlias(antiAlias);
+				stepCountPaint.setAntiAlias(antiAlias);
 			}
+
 			invalidate();
 
 			// Whether the timer should be running depends on whether we're in ambient mode (as well
@@ -456,6 +497,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		public void onDraw(Canvas canvas, Rect bounds) {
 			mTime.setToNow();
 
+
 			// Show colons for the first half of each second so the colons blink on when the time
 			// updates.
 			mShouldDrawColons = (System.currentTimeMillis() % 1000) < 500;
@@ -537,7 +579,13 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				}
 				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
 				canvas.drawBitmap(mPikaAnimeScalsedBitmap, 0, 0, null);
+				// 歩数を表示
+				String step = String.valueOf((int)mStepCount);
+				Log.d("Pika","draw step: "+step);
+				canvas.drawText(step, XstepOffset, YstepOffset, stepCountPaint);
 			}
+
+
 
 			// Draw the hours.
 			float x = mXOffset;
@@ -717,6 +765,31 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			if (Log.isLoggable(TAG, Log.DEBUG)) {
 				Log.d(TAG, "onConnectionFailed: " + result);
 			}
+		}
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+				Log.d("Pika","stepCounter:"+event.values[0]);
+				mStepCount = event.values[0];
+//				if (mPrevStepCount != 0) {
+//					mStepCount += event.values[0] - mPrevStepCount;
+//				}
+//				mPrevStepCount = event.values[0];
+//				if(mStepCount!=0){
+//					Log.d("Pika","mStepcount: "+mStepCount);
+					mSensorManager.unregisterListener(this,sensorStepCounter);
+//				}
+			}
+//			else {
+//				mStepCount++;
+//			}
+
+		}
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
 		}
 	}
 }
