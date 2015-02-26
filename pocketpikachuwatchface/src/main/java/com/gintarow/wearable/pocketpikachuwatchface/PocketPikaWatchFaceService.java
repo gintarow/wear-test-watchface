@@ -87,6 +87,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 	 */
 	static float mStepCount=0;
 	static float mPrevStepCount=0;
+	static boolean sensorState = false;
 
 	@Override
 	public Engine onCreateEngine() {
@@ -210,7 +211,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			//センサー設定
 			mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
 			sensorStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-			mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+//			mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
 
 			setWatchFaceStyle(new WatchFaceStyle.Builder(PocketPikaWatchFaceService.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
@@ -238,6 +239,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			typeface = Typeface.createFromAsset(getAssets(), "font/digital-7.ttf");
 //			stepCountPaint = createTextPaint(resources.getColor(R.color.black),typeface);
 			stepCountPaint.setTypeface(typeface);
+			stepCountPaint.setTextAlign(Paint.Align.RIGHT);
 			stepCountPaint.setAntiAlias(true);
 
 
@@ -254,6 +256,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 		@Override
 		public void onDestroy() {
+			Log.d("Pika","onDestroy");
 			mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
 			super.onDestroy();
 		}
@@ -281,7 +284,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				mGoogleApiClient.connect();
 
 				registerReceiver();
-				mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_UI);
+				if(!sensorState) {
+					mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+					sensorState=true;
+					Log.d("Pika","Sensor registered");
+				}
 
 //				Log.d("Pika","visiblity true, count:"+ambientanimecount);
 				// Update time zone in case it changed while we weren't visible.
@@ -289,6 +296,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				mTime.setToNow();
 			} else {
 				unregisterReceiver();
+				if(sensorState){
+					mSensorManager.unregisterListener(this);
+					sensorState=false;
+					Log.d("Pika","Sensor unregistered");
+				}
 				choice=-1;
 				ambientanimecount=0;
 //				Log.d("Pika","visiblity false, count:"+ambientanimecount);
@@ -317,8 +329,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			if (!mRegisteredTimeZoneReceiver) {
 				return;
 			}
+			//TODO unregisterReceiver呼ばれてないって怒られる
+			//Service com.gintarow.wearable.pocketpikachuwatchface.PocketPikaWatchFaceService has leaked IntentReceiver android.support.wearable.watchface.WatchFaceService$Engine$1@17905c0b that was originally registered here. Are you missing a call to unregisterReceiver()?
 			mRegisteredTimeZoneReceiver = false;
 			PocketPikaWatchFaceService.this.unregisterReceiver(mTimeZoneReceiver);
+			Log.d("Pika","unregisterReceiver");
 		}
 
 		@Override
@@ -396,6 +411,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				ambientanimecount = 16;
 			}else{
 				ambientanimecount=0;
+			}
+
+			if(inAmbientMode&&sensorState) {
+				mSensorManager.unregisterListener(this, sensorStepCounter);
+				sensorState=false;
+				Log.d("Pika","Sensor unregistered [inAmbientChanged]");
 			}
 
 			if (mLowBitAmbient) {
@@ -772,19 +793,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
 				Log.d("Pika","stepCounter:"+event.values[0]);
 				mStepCount = event.values[0];
-//				if (mPrevStepCount != 0) {
-//					mStepCount += event.values[0] - mPrevStepCount;
-//				}
-//				mPrevStepCount = event.values[0];
-//				if(mStepCount!=0){
-//					Log.d("Pika","mStepcount: "+mStepCount);
-					mSensorManager.unregisterListener(this,sensorStepCounter);
-//				}
+				if(sensorState) {
+					mSensorManager.unregisterListener(this, sensorStepCounter);
+					sensorState=false;
+					Log.d("Pika","Sensor unregistered [sensorChanged]");
+				}
 			}
-//			else {
-//				mStepCount++;
-//			}
-
 		}
 
 		@Override

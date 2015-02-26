@@ -29,6 +29,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="digital_text_size_step">30dp</dimen>
 	<dimen name="digital_y_offset_step">215dp</dimen>
-	<dimen name="digital_x_offset_step">110dp</dimen>
+	<dimen name="digital_x_offset_step">180dp</dimen>
 
 </resources>
