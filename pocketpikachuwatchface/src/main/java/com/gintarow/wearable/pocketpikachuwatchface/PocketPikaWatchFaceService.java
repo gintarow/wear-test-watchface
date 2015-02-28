@@ -86,7 +86,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 	 * 歩数記録用
 	 */
 	static float mStepCount=0;
-	static float mPrevStepCount=0;
+	static long mPrevTime=0;
 	static boolean sensorState = false;
 
 	@Override
@@ -284,22 +284,26 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				mGoogleApiClient.connect();
 
 				registerReceiver();
-				if(!sensorState) {
-					mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-					sensorState=true;
-					Log.d("Pika","Sensor registered");
-				}
 
 //				Log.d("Pika","visiblity true, count:"+ambientanimecount);
 				// Update time zone in case it changed while we weren't visible.
 				mTime.clear(TimeZone.getDefault().getID());
 				mTime.setToNow();
+				long currenttime = mTime.toMillis(false);
+
+				Log.d("Pika","current time: "+currenttime);
+				if(!sensorState&&(currenttime-mPrevTime>=300000)) {	//前回の取得から5分以上経過してたら
+					mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+					sensorState=true;
+					Log.d("Pika","Sensor registered");
+					mPrevTime=mTime.toMillis(false);
+				}
 			} else {
 				unregisterReceiver();
 				if(sensorState){
 					mSensorManager.unregisterListener(this);
 					sensorState=false;
-					Log.d("Pika","Sensor unregistered");
+					Log.d("Pika","Sensor unregistered [visiblityChanged]");
 				}
 				choice=-1;
 				ambientanimecount=0;
@@ -517,7 +521,6 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		@Override
 		public void onDraw(Canvas canvas, Rect bounds) {
 			mTime.setToNow();
-
 
 			// Show colons for the first half of each second so the colons blink on when the time
 			// updates.
