@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/Application" />
             <option value="$PROJECT_DIR$/MondaineWatchFace" />
             <option value="$PROJECT_DIR$/Wearable" />
+            <option value="$PROJECT_DIR$/pocketpikachuwatchface" />
           </set>
         </option>
       </GradleProjectSettings>
