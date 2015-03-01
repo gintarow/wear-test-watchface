@@ -1,3 +1,9 @@
 <resources>
 	<string name="app_name">PocketPikachuWatchFace</string>
+	<string name="pocket_pika_name">Pocket Pikachu</string>
+	<string name="digital_am">AM</string>
+	<string name="digital_pm">PM</string>
+	<string name="title_activity_pocket_pika_watch_face_service">PocketPikaWatchFaceService</string>
+	<string name="hello_world">Hello world!</string>
+	<string name="action_settings">Settings</string>
 </resources>
