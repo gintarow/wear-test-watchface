@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pioneer.ispc_rd.pocketpikachuwatchface;
+package com.gintarow.wearable.pocketpikachuwatchface;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -52,6 +52,7 @@ import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
+import com.pioneer.ispc_rd.pocketpikachuwatchface.R;
 
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -245,11 +246,16 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 			mBackgroundPaint = new Paint();
 			mBackgroundPaint.setColor(mInteractiveBackgroundColor);
-			mHourPaint = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
-			mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor);
-			mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor);
+//			mHourPaint = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
+//			mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor);
+//			mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor);
+			mHourPaint = createTextPaint(mInteractiveHourDigitsColor, typeface);
+			mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor, typeface);
+			mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor, typeface);
 			mAmPmPaint = createTextPaint(resources.getColor(R.color.digital_am_pm));
-			mColonPaint = createTextPaint(resources.getColor(R.color.digital_colons));
+//			mColonPaint = createTextPaint(resources.getColor(R.color.digital_colons));
+			mColonPaint = createTextPaint(resources.getColor(R.color.digital_colons), typeface);
+			Log.d("Pika","createtextPaint");
 
 			mTime = new Time();
 		}
@@ -613,7 +619,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 			// Draw the hours.
 			float x = mXOffset;
-			String hourString = String.valueOf(convertTo12Hour(mTime.hour));
+//			String hourString = String.valueOf(convertTo12Hour(mTime.hour));
+			String hourString = String.valueOf(mTime.hour);
 			canvas.drawText(hourString, x, mYOffset, mHourPaint);
 			x += mHourPaint.measureText(hourString);
 
@@ -632,8 +639,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			// In ambient and mute modes, draw AM/PM. Otherwise, draw a second blinking
 			// colon followed by the seconds.
 			if (isInAmbientMode() || mMute) {
-				x += mColonWidth;
-				canvas.drawText(getAmPmString(mTime.hour), x, mYOffset, mAmPmPaint);
+//				x += mColonWidth;
+//				canvas.drawText(getAmPmString(mTime.hour), x, mYOffset, mAmPmPaint);
 			} else {
 				if (mShouldDrawColons) {
 					canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
