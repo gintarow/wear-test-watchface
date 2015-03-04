@@ -27,9 +27,8 @@ List<String> dirs = [
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
-        applicationId "com.pioneer.ispc_rd.pocketpikachuwatchface"
+        applicationId 'com.gintarow.wearable.pocketpikachuwatchface'
         minSdkVersion 21
         targetSdkVersion 21
         versionCode 1
@@ -51,6 +50,8 @@ android {
         androidTest.setRoot('tests')
         androidTest.java.srcDirs = ['tests/src']
 
+    }
+    productFlavors {
     }
 }
 

@@ -21,8 +21,10 @@
     <dimen name="digital_am_pm_size">25dp</dimen>
     <dimen name="digital_am_pm_size_round">30dp</dimen>
     <dimen name="digital_x_offset">15dp</dimen>
-    <dimen name="digital_x_offset_round">25dp</dimen>
-    <dimen name="digital_y_offset">90dp</dimen>
+    <!--<dimen name="digital_x_offset_round">25dp</dimen>-->
+    <dimen name="digital_x_offset_round">70dp</dimen>
+    <!--<dimen name="digital_y_offset">90dp</dimen>-->
+    <dimen name="digital_y_offset">60dp</dimen>
     <dimen name="digital_config_color_picker_item_margin">32dp</dimen>
     <dimen name="content_padding_start">12dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>

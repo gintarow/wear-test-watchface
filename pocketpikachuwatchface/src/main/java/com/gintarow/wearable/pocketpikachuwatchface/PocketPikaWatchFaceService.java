@@ -170,7 +170,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		Paint mHourPaint;
 		Paint mMinutePaint;
 		Paint mSecondPaint;
-		Paint mAmPmPaint;
+//		Paint mAmPmPaint;
 		Paint mColonPaint;
 		float mColonWidth;
 		boolean mMute;
@@ -249,12 +249,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //			mHourPaint = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
 //			mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor);
 //			mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor);
-			mHourPaint = createTextPaint(mInteractiveHourDigitsColor, typeface);
-			mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor, typeface);
-			mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor, typeface);
-			mAmPmPaint = createTextPaint(resources.getColor(R.color.digital_am_pm));
+			mHourPaint = createTextPaint(R.color.black, typeface);
+			mMinutePaint = createTextPaint(R.color.black, typeface);
+			mSecondPaint = createTextPaint(R.color.black, typeface);
+//			mAmPmPaint = createTextPaint(resources.getColor(R.color.digital_am_pm));
 //			mColonPaint = createTextPaint(resources.getColor(R.color.digital_colons));
-			mColonPaint = createTextPaint(resources.getColor(R.color.digital_colons), typeface);
+			mColonPaint = createTextPaint(resources.getColor(R.color.dark_grey), typeface);
 			Log.d("Pika","createtextPaint");
 
 			mTime = new Time();
@@ -365,14 +365,16 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 			mHourPaint.setTextSize(textSize);
 			mMinutePaint.setTextSize(textSize);
-			mSecondPaint.setTextSize(textSize);
-			mAmPmPaint.setTextSize(amPmSize);
+//			mSecondPaint.setTextSize(textSize);
+			mSecondPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size_step));
+//			mAmPmPaint.setTextSize(amPmSize);
 			mColonPaint.setTextSize(textSize);
 			stepCountPaint.setTextSize(resources.getDimensionPixelSize(R.dimen.digital_text_size_step));
 			XstepOffset = resources.getDimension(R.dimen.digital_x_offset_step);
 			YstepOffset = resources.getDimension(R.dimen.digital_y_offset_step);
 
 			mColonWidth = mColonPaint.measureText(COLON_STRING);
+//			mColonWidth = 5;
 		}
 
 		@Override
@@ -380,7 +382,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			super.onPropertiesChanged(properties);
 
 			boolean burnInProtection = properties.getBoolean(PROPERTY_BURN_IN_PROTECTION, false);
-			mHourPaint.setTypeface(burnInProtection ? NORMAL_TYPEFACE : BOLD_TYPEFACE);
+//			mHourPaint.setTypeface(burnInProtection ? NORMAL_TYPEFACE : BOLD_TYPEFACE);
 
 			mLowBitAmbient = properties.getBoolean(PROPERTY_LOW_BIT_AMBIENT, false);
 
@@ -407,13 +409,19 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			}
 			adjustPaintColorToCurrentMode(mBackgroundPaint, mInteractiveBackgroundColor,
 					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND);
-			adjustPaintColorToCurrentMode(mHourPaint, mInteractiveHourDigitsColor,
+//			adjustPaintColorToCurrentMode(mHourPaint, mInteractiveHourDigitsColor,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
+//			adjustPaintColorToCurrentMode(mMinutePaint, mInteractiveMinuteDigitsColor,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
+			adjustPaintColorToCurrentMode(mHourPaint, R.color.black,
 					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
-			adjustPaintColorToCurrentMode(mMinutePaint, mInteractiveMinuteDigitsColor,
+			adjustPaintColorToCurrentMode(mMinutePaint, R.color.black,
 					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
 			// Actually, the seconds are not rendered in the ambient mode, so we could pass just any
 			// value as ambientColor here.
-			adjustPaintColorToCurrentMode(mSecondPaint, mInteractiveSecondDigitsColor,
+//			adjustPaintColorToCurrentMode(mSecondPaint, mInteractiveSecondDigitsColor,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
+			adjustPaintColorToCurrentMode(mSecondPaint, R.color.black,
 					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
 
 //			Log.d("Pika","Amb "+inAmbientMode+", count:"+ambientanimecount);
@@ -434,7 +442,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				mHourPaint.setAntiAlias(antiAlias);
 				mMinutePaint.setAntiAlias(antiAlias);
 				mSecondPaint.setAntiAlias(antiAlias);
-				mAmPmPaint.setAntiAlias(antiAlias);
+//				mAmPmPaint.setAntiAlias(antiAlias);
 				mColonPaint.setAntiAlias(antiAlias);
 				stepCountPaint.setAntiAlias(antiAlias);
 			}
@@ -468,7 +476,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				mHourPaint.setAlpha(alpha);
 				mMinutePaint.setAlpha(alpha);
 				mColonPaint.setAlpha(alpha);
-				mAmPmPaint.setAlpha(alpha);
+//				mAmPmPaint.setAlpha(alpha);
 				invalidate();
 			}
 		}
@@ -623,6 +631,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			String hourString = String.valueOf(mTime.hour);
 			canvas.drawText(hourString, x, mYOffset, mHourPaint);
 			x += mHourPaint.measureText(hourString);
+			x -=10;
 
 			// In ambient and mute modes, always draw the first colon. Otherwise, draw the
 			// first colon for the first half of each second.
@@ -630,6 +639,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
 			}
 			x += mColonWidth;
+			x -=10;
 
 			// Draw the minutes.
 			String minuteString = formatTwoDigitNumber(mTime.minute);
@@ -642,10 +652,10 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //				x += mColonWidth;
 //				canvas.drawText(getAmPmString(mTime.hour), x, mYOffset, mAmPmPaint);
 			} else {
-				if (mShouldDrawColons) {
-					canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
-				}
-				x += mColonWidth;
+//				if (mShouldDrawColons) {
+//					canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
+//				}
+				x += (mColonWidth/2);
 				canvas.drawText(formatTwoDigitNumber(mTime.second), x, mYOffset,
 						mSecondPaint);
 			}
