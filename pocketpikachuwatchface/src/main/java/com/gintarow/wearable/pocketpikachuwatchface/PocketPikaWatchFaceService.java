@@ -43,15 +43,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.DataApi;
-import com.google.android.gms.wearable.DataEvent;
-import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataItem;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.DataMapItem;
-import com.google.android.gms.wearable.Wearable;
 import com.pioneer.ispc_rd.pocketpikachuwatchface.R;
 
 import java.util.TimeZone;
@@ -86,8 +77,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 	/**
 	 * 歩数記録用
 	 */
-	static float mStepCount=0;
-	static long mPrevTime=0;
+	static float mStepCount = -1;
+	static long mPrevTime = 0;
 	static boolean sensorState = false;
 
 	@Override
@@ -95,8 +86,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		return new Engine();
 	}
 
-	private class Engine extends CanvasWatchFaceService.Engine implements DataApi.DataListener,
-			GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, SensorEventListener {
+	private class Engine extends CanvasWatchFaceService.Engine
+			implements /*DataApi.DataListener,/*GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,*/ SensorEventListener {
 		static final String COLON_STRING = ":";
 
 		/** Alpha value for drawing time when in mute mode. */
@@ -131,11 +122,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			}
 		};
 
-		GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(PocketPikaWatchFaceService.this)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.addApi(Wearable.API)
-				.build();
+//		GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(PocketPikaWatchFaceService.this)
+//				.addConnectionCallbacks(this)
+//				.addOnConnectionFailedListener(this)
+//				.addApi(Wearable.API)
+//				.build();
 
 		final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
 			@Override
@@ -182,12 +173,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		String mPmString;
 		int mInteractiveBackgroundColor =
 				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND;
-		int mInteractiveHourDigitsColor =
-				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS;
-		int mInteractiveMinuteDigitsColor =
-				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS;
-		int mInteractiveSecondDigitsColor =
-				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS;
+//		int mInteractiveHourDigitsColor =
+//				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS;
+//		int mInteractiveMinuteDigitsColor =
+//				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS;
+//		int mInteractiveSecondDigitsColor =
+//				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS;
 
 		/**
 		 * Sensor
@@ -246,6 +237,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 			mBackgroundPaint = new Paint();
 			mBackgroundPaint.setColor(mInteractiveBackgroundColor);
+//			mBackgroundPaint.setColor(resources.getColor(R.color.black));
 //			mHourPaint = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
 //			mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor);
 //			mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor);
@@ -255,7 +247,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //			mAmPmPaint = createTextPaint(resources.getColor(R.color.digital_am_pm));
 //			mColonPaint = createTextPaint(resources.getColor(R.color.digital_colons));
 			mColonPaint = createTextPaint(resources.getColor(R.color.dark_grey), typeface);
-			Log.d("Pika","createtextPaint");
+			Log.d("Pika","createTextPaint");
 
 			mTime = new Time();
 		}
@@ -287,11 +279,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			super.onVisibilityChanged(visible);
 
 			if (visible) {
-				mGoogleApiClient.connect();
+//				mGoogleApiClient.connect();
 
 				registerReceiver();
 
-//				Log.d("Pika","visiblity true, count:"+ambientanimecount);
+//				Log.d("Pika","visibility true, count:"+ambientanimecount);
 				// Update time zone in case it changed while we weren't visible.
 				mTime.clear(TimeZone.getDefault().getID());
 				mTime.setToNow();
@@ -306,19 +298,19 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				}
 			} else {
 				unregisterReceiver();
-				if(sensorState){
+				if(sensorState && mStepCount>=0){
 					mSensorManager.unregisterListener(this);
 					sensorState=false;
-					Log.d("Pika","Sensor unregistered [visiblityChanged]");
+					Log.d("Pika","Sensor unregistered [visibilityChanged]");
 				}
 				choice=-1;
 				ambientanimecount=0;
 //				Log.d("Pika","visiblity false, count:"+ambientanimecount);
 
-				if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-					Wearable.DataApi.removeListener(mGoogleApiClient, this);
-					mGoogleApiClient.disconnect();
-				}
+//				if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+//					Wearable.DataApi.removeListener(mGoogleApiClient, this);
+//					mGoogleApiClient.disconnect();
+//				}
 			}
 
 			// Whether the timer should be running depends on whether we're visible (as well as
@@ -407,22 +399,19 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			if (Log.isLoggable(TAG, Log.DEBUG)) {
 				Log.d(TAG, "onAmbientModeChanged: " + inAmbientMode);
 			}
-			adjustPaintColorToCurrentMode(mBackgroundPaint, mInteractiveBackgroundColor,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND);
+//			adjustPaintColorToCurrentMode(mBackgroundPaint, mInteractiveBackgroundColor,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND);
 //			adjustPaintColorToCurrentMode(mHourPaint, mInteractiveHourDigitsColor,
 //					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
 //			adjustPaintColorToCurrentMode(mMinutePaint, mInteractiveMinuteDigitsColor,
 //					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
-			adjustPaintColorToCurrentMode(mHourPaint, R.color.black,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
-			adjustPaintColorToCurrentMode(mMinutePaint, R.color.black,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
+
 			// Actually, the seconds are not rendered in the ambient mode, so we could pass just any
 			// value as ambientColor here.
 //			adjustPaintColorToCurrentMode(mSecondPaint, mInteractiveSecondDigitsColor,
 //					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
-			adjustPaintColorToCurrentMode(mSecondPaint, R.color.black,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
+//			adjustPaintColorToCurrentMode(mSecondPaint, R.color.black,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
 
 //			Log.d("Pika","Amb "+inAmbientMode+", count:"+ambientanimecount);
 			if(inAmbientMode&&choice!=-1) {
@@ -431,10 +420,18 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				ambientanimecount=0;
 			}
 
-			if(inAmbientMode&&sensorState) {
+			if(inAmbientMode&&sensorState && mStepCount>=0) {
 				mSensorManager.unregisterListener(this, sensorStepCounter);
 				sensorState=false;
 				Log.d("Pika","Sensor unregistered [inAmbientChanged]");
+			}
+
+			if(!inAmbientMode){
+				//色を元に戻す
+				adjustPaintColorToCurrentMode(mHourPaint, R.color.black, R.color.white);
+				adjustPaintColorToCurrentMode(mMinutePaint, R.color.black, R.color.white);
+				adjustPaintColorToCurrentMode(mColonPaint, R.color.black, R.color.white);
+				adjustPaintColorToCurrentMode(mSecondPaint, R.color.black, R.color.white);
 			}
 
 			if (mLowBitAmbient) {
@@ -456,7 +453,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 		private void adjustPaintColorToCurrentMode(Paint paint, int interactiveColor,
 												   int ambientColor) {
-			paint.setColor(isInAmbientMode() ? ambientColor : interactiveColor);
+//			paint.setColor(isInAmbientMode() ? ambientColor : interactiveColor);
+			paint.setColor(shouldTimerBeRunning() ? ambientColor : interactiveColor);
 		}
 
 		@Override
@@ -493,31 +491,31 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			}
 		}
 
-		private void updatePaintIfInteractive(Paint paint, int interactiveColor) {
-			if (!isInAmbientMode() && paint != null) {
-				paint.setColor(interactiveColor);
-			}
-		}
-
-		private void setInteractiveBackgroundColor(int color) {
-			mInteractiveBackgroundColor = color;
-			updatePaintIfInteractive(mBackgroundPaint, color);
-		}
-
-		private void setInteractiveHourDigitsColor(int color) {
-			mInteractiveHourDigitsColor = color;
-			updatePaintIfInteractive(mHourPaint, color);
-		}
-
-		private void setInteractiveMinuteDigitsColor(int color) {
-			mInteractiveMinuteDigitsColor = color;
-			updatePaintIfInteractive(mMinutePaint, color);
-		}
-
-		private void setInteractiveSecondDigitsColor(int color) {
-			mInteractiveSecondDigitsColor = color;
-			updatePaintIfInteractive(mSecondPaint, color);
-		}
+//		private void updatePaintIfInteractive(Paint paint, int interactiveColor) {
+//			if (!isInAmbientMode() && paint != null) {
+//				paint.setColor(interactiveColor);
+//			}
+//		}
+//
+//		private void setInteractiveBackgroundColor(int color) {
+//			mInteractiveBackgroundColor = color;
+//			updatePaintIfInteractive(mBackgroundPaint, color);
+//		}
+//
+//		private void setInteractiveHourDigitsColor(int color) {
+//			mInteractiveHourDigitsColor = color;
+//			updatePaintIfInteractive(mHourPaint, color);
+//		}
+//
+//		private void setInteractiveMinuteDigitsColor(int color) {
+//			mInteractiveMinuteDigitsColor = color;
+//			updatePaintIfInteractive(mMinutePaint, color);
+//		}
+//
+//		private void setInteractiveSecondDigitsColor(int color) {
+//			mInteractiveSecondDigitsColor = color;
+//			updatePaintIfInteractive(mSecondPaint, color);
+//		}
 
 		private String formatTwoDigitNumber(int hour) {
 			return String.format("%02d", hour);
@@ -544,6 +542,13 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //			if(isInAmbientMode()) {
 			if(isInAmbientMode()&&ambientanimecount==0) {
 				choice=-1;
+				//色変更
+				adjustPaintColorToCurrentMode(mHourPaint, R.color.black, R.color.white);
+				adjustPaintColorToCurrentMode(mMinutePaint, R.color.black, R.color.white);
+				adjustPaintColorToCurrentMode(mColonPaint, R.color.black, R.color.white);
+				adjustPaintColorToCurrentMode(mSecondPaint, R.color.black, R.color.white);
+
+				mBackgroundPaint.setAlpha(128);
 				canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
 			}else{
 				int width = bounds.width();
@@ -617,21 +622,20 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				}
 				canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
 				canvas.drawBitmap(mPikaAnimeScalsedBitmap, 0, 0, null);
-				// 歩数を表示
-				String step = String.valueOf((int)mStepCount);
-				Log.d("Pika","draw step: "+step);
-				canvas.drawText(step, XstepOffset, YstepOffset, stepCountPaint);
 			}
 
-
+			// Draw step count
+			String step = String.valueOf((int)mStepCount);
+//			Log.d("Pika","draw step: "+step);
+			canvas.drawText(step, XstepOffset, YstepOffset, stepCountPaint);
 
 			// Draw the hours.
 			float x = mXOffset;
 //			String hourString = String.valueOf(convertTo12Hour(mTime.hour));
-			String hourString = String.valueOf(mTime.hour);
+			String hourString = String.valueOf(formatTwoDigitNumber(mTime.hour));
 			canvas.drawText(hourString, x, mYOffset, mHourPaint);
 			x += mHourPaint.measureText(hourString);
-			x -=10;
+			x -=7;	//コロンの隙間を小さく
 
 			// In ambient and mute modes, always draw the first colon. Otherwise, draw the
 			// first colon for the first half of each second.
@@ -639,7 +643,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
 			}
 			x += mColonWidth;
-			x -=10;
+			x -=7;	//コロンの隙間を小さく
 
 			// Draw the minutes.
 			String minuteString = formatTwoDigitNumber(mTime.minute);
@@ -684,136 +688,136 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			return (isVisible() && !isInAmbientMode()) || (isInAmbientMode() && ambientanimecount!=0);
 		}
 
-		private void updateConfigDataItemAndUiOnStartup() {
-			DigitalWatchFaceUtil.fetchConfigDataMap(mGoogleApiClient,
-					new DigitalWatchFaceUtil.FetchConfigDataMapCallback() {
-						@Override
-						public void onConfigDataMapFetched(DataMap startupConfig) {
-							// If the DataItem hasn't been created yet or some keys are missing,
-							// use the default values.
-							setDefaultValuesForMissingConfigKeys(startupConfig);
-							DigitalWatchFaceUtil.putConfigDataItem(mGoogleApiClient, startupConfig);
+//		private void updateConfigDataItemAndUiOnStartup() {
+//			DigitalWatchFaceUtil.fetchConfigDataMap(mGoogleApiClient,
+//					new DigitalWatchFaceUtil.FetchConfigDataMapCallback() {
+//						@Override
+//						public void onConfigDataMapFetched(DataMap startupConfig) {
+//							// If the DataItem hasn't been created yet or some keys are missing,
+//							// use the default values.
+//							setDefaultValuesForMissingConfigKeys(startupConfig);
+//							DigitalWatchFaceUtil.putConfigDataItem(mGoogleApiClient, startupConfig);
+//
+//							updateUiForConfigDataMap(startupConfig);
+//						}
+//					}
+//			);
+//		}
+//
+//		private void setDefaultValuesForMissingConfigKeys(DataMap config) {
+//			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_BACKGROUND_COLOR,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND);
+//			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_HOURS_COLOR,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
+//			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_MINUTES_COLOR,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
+//			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_SECONDS_COLOR,
+//					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
+//		}
+//
+//		private void addIntKeyIfMissing(DataMap config, String key, int color) {
+//			if (!config.containsKey(key)) {
+//				config.putInt(key, color);
+//			}
+//		}
 
-							updateUiForConfigDataMap(startupConfig);
-						}
-					}
-			);
-		}
-
-		private void setDefaultValuesForMissingConfigKeys(DataMap config) {
-			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_BACKGROUND_COLOR,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_BACKGROUND);
-			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_HOURS_COLOR,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_HOUR_DIGITS);
-			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_MINUTES_COLOR,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS);
-			addIntKeyIfMissing(config, DigitalWatchFaceUtil.KEY_SECONDS_COLOR,
-					DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS);
-		}
-
-		private void addIntKeyIfMissing(DataMap config, String key, int color) {
-			if (!config.containsKey(key)) {
-				config.putInt(key, color);
-			}
-		}
-
-		@Override // DataApi.DataListener
-		public void onDataChanged(DataEventBuffer dataEvents) {
-			try {
-				for (DataEvent dataEvent : dataEvents) {
-					if (dataEvent.getType() != DataEvent.TYPE_CHANGED) {
-						continue;
-					}
-
-					DataItem dataItem = dataEvent.getDataItem();
-					if (!dataItem.getUri().getPath().equals(
-							DigitalWatchFaceUtil.PATH_WITH_FEATURE)) {
-						continue;
-					}
-
-					DataMapItem dataMapItem = DataMapItem.fromDataItem(dataItem);
-					DataMap config = dataMapItem.getDataMap();
-					if (Log.isLoggable(TAG, Log.DEBUG)) {
-						Log.d(TAG, "Config DataItem updated:" + config);
-					}
-					updateUiForConfigDataMap(config);
-				}
-			} finally {
-				dataEvents.close();
-			}
-		}
-
-		private void updateUiForConfigDataMap(final DataMap config) {
-			boolean uiUpdated = false;
-			for (String configKey : config.keySet()) {
-				if (!config.containsKey(configKey)) {
-					continue;
-				}
-				int color = config.getInt(configKey);
-				if (Log.isLoggable(TAG, Log.DEBUG)) {
-					Log.d(TAG, "Found watch face config key: " + configKey + " -> "
-							+ Integer.toHexString(color));
-				}
-				if (updateUiForKey(configKey, color)) {
-					uiUpdated = true;
-				}
-			}
-			if (uiUpdated) {
-				invalidate();
-			}
-		}
-
-		/**
-		 * Updates the color of a UI item according to the given {@code configKey}. Does nothing if
-		 * {@code configKey} isn't recognized.
-		 *
-		 * @return whether UI has been updated
-		 */
-		private boolean updateUiForKey(String configKey, int color) {
-			if (configKey.equals(DigitalWatchFaceUtil.KEY_BACKGROUND_COLOR)) {
-				setInteractiveBackgroundColor(color);
-			} else if (configKey.equals(DigitalWatchFaceUtil.KEY_HOURS_COLOR)) {
-				setInteractiveHourDigitsColor(color);
-			} else if (configKey.equals(DigitalWatchFaceUtil.KEY_MINUTES_COLOR)) {
-				setInteractiveMinuteDigitsColor(color);
-			} else if (configKey.equals(DigitalWatchFaceUtil.KEY_SECONDS_COLOR)) {
-				setInteractiveSecondDigitsColor(color);
-			} else {
-				Log.w(TAG, "Ignoring unknown config key: " + configKey);
-				return false;
-			}
-			return true;
-		}
-
-		@Override  // GoogleApiClient.ConnectionCallbacks
-		public void onConnected(Bundle connectionHint) {
-			if (Log.isLoggable(TAG, Log.DEBUG)) {
-				Log.d(TAG, "onConnected: " + connectionHint);
-			}
-			Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
-			updateConfigDataItemAndUiOnStartup();
-		}
-
-		@Override  // GoogleApiClient.ConnectionCallbacks
-		public void onConnectionSuspended(int cause) {
-			if (Log.isLoggable(TAG, Log.DEBUG)) {
-				Log.d(TAG, "onConnectionSuspended: " + cause);
-			}
-		}
-
-		@Override  // GoogleApiClient.OnConnectionFailedListener
-		public void onConnectionFailed(ConnectionResult result) {
-			if (Log.isLoggable(TAG, Log.DEBUG)) {
-				Log.d(TAG, "onConnectionFailed: " + result);
-			}
-		}
+//		@Override // DataApi.DataListener
+//		public void onDataChanged(DataEventBuffer dataEvents) {
+//			try {
+//				for (DataEvent dataEvent : dataEvents) {
+//					if (dataEvent.getType() != DataEvent.TYPE_CHANGED) {
+//						continue;
+//					}
+//
+//					DataItem dataItem = dataEvent.getDataItem();
+//					if (!dataItem.getUri().getPath().equals(
+//							DigitalWatchFaceUtil.PATH_WITH_FEATURE)) {
+//						continue;
+//					}
+//
+//					DataMapItem dataMapItem = DataMapItem.fromDataItem(dataItem);
+//					DataMap config = dataMapItem.getDataMap();
+//					if (Log.isLoggable(TAG, Log.DEBUG)) {
+//						Log.d(TAG, "Config DataItem updated:" + config);
+//					}
+//					updateUiForConfigDataMap(config);
+//				}
+//			} finally {
+//				dataEvents.close();
+//			}
+//		}
+//
+//		private void updateUiForConfigDataMap(final DataMap config) {
+//			boolean uiUpdated = false;
+//			for (String configKey : config.keySet()) {
+//				if (!config.containsKey(configKey)) {
+//					continue;
+//				}
+//				int color = config.getInt(configKey);
+//				if (Log.isLoggable(TAG, Log.DEBUG)) {
+//					Log.d(TAG, "Found watch face config key: " + configKey + " -> "
+//							+ Integer.toHexString(color));
+//				}
+//				if (updateUiForKey(configKey, color)) {
+//					uiUpdated = true;
+//				}
+//			}
+//			if (uiUpdated) {
+//				invalidate();
+//			}
+//		}
+//
+//		/**
+//		 * Updates the color of a UI item according to the given {@code configKey}. Does nothing if
+//		 * {@code configKey} isn't recognized.
+//		 *
+//		 * @return whether UI has been updated
+//		 */
+//		private boolean updateUiForKey(String configKey, int color) {
+//			if (configKey.equals(DigitalWatchFaceUtil.KEY_BACKGROUND_COLOR)) {
+//				setInteractiveBackgroundColor(color);
+//			} else if (configKey.equals(DigitalWatchFaceUtil.KEY_HOURS_COLOR)) {
+//				setInteractiveHourDigitsColor(color);
+//			} else if (configKey.equals(DigitalWatchFaceUtil.KEY_MINUTES_COLOR)) {
+//				setInteractiveMinuteDigitsColor(color);
+//			} else if (configKey.equals(DigitalWatchFaceUtil.KEY_SECONDS_COLOR)) {
+//				setInteractiveSecondDigitsColor(color);
+//			} else {
+//				Log.w(TAG, "Ignoring unknown config key: " + configKey);
+//				return false;
+//			}
+//			return true;
+//		}
+//
+//		@Override  // GoogleApiClient.ConnectionCallbacks
+//		public void onConnected(Bundle connectionHint) {
+//			if (Log.isLoggable(TAG, Log.DEBUG)) {
+//				Log.d(TAG, "onConnected: " + connectionHint);
+//			}
+//			Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
+//			updateConfigDataItemAndUiOnStartup();
+//		}
+//
+//		@Override  // GoogleApiClient.ConnectionCallbacks
+//		public void onConnectionSuspended(int cause) {
+//			if (Log.isLoggable(TAG, Log.DEBUG)) {
+//				Log.d(TAG, "onConnectionSuspended: " + cause);
+//			}
+//		}
+//
+//		@Override  // GoogleApiClient.OnConnectionFailedListener
+//		public void onConnectionFailed(ConnectionResult result) {
+//			if (Log.isLoggable(TAG, Log.DEBUG)) {
+//				Log.d(TAG, "onConnectionFailed: " + result);
+//			}
+//		}
 
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 			if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
 				Log.d("Pika","stepCounter:"+event.values[0]);
 				mStepCount = event.values[0];
-				if(sensorState) {
+				if(sensorState && mStepCount>=0) {
 					mSensorManager.unregisterListener(this, sensorStepCounter);
 					sensorState=false;
 					Log.d("Pika","Sensor unregistered [sensorChanged]");
