@@ -100,6 +100,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 		static final int MSG_UPDATE_STEP = 1;
 
+		static final int MSG_RESET_STEP_DAY_BY_DAY = 2;
+
 		/** How often {@link #mUpdateTimeHandler} ticks in milliseconds. */
 		long mInteractiveUpdateRateMs = NORMAL_UPDATE_RATE_MS;
 
@@ -128,6 +130,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 						long timeMs = System.currentTimeMillis();
 						long delayMs = StepCountUpdateIntervalMs - (timeMs % StepCountUpdateIntervalMs);
 						mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_STEP, delayMs);
+						break;
+					case MSG_RESET_STEP_DAY_BY_DAY:
+						//todo 日毎に歩数計をリセット＋記録
 						break;
 				}
 			}
