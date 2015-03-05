@@ -98,8 +98,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 		static final int MSG_UPDATE_TIME = 0;
 
+		static final int MSG_UPDATE_STEP = 1;
+
 		/** How often {@link #mUpdateTimeHandler} ticks in milliseconds. */
 		long mInteractiveUpdateRateMs = NORMAL_UPDATE_RATE_MS;
+
+		long StepCountUpdateIntervalMs = 15 * 60 * 1000;
 
 		/** Handler to update the time periodically in interactive mode. */
 		final Handler mUpdateTimeHandler = new Handler() {
@@ -117,6 +121,13 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 									mInteractiveUpdateRateMs - (timeMs % mInteractiveUpdateRateMs);
 							mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
 						}
+						break;
+					case MSG_UPDATE_STEP:
+						Log.d(TAG,"update step count");
+						updateStepCount();
+						long timeMs = System.currentTimeMillis();
+						long delayMs = StepCountUpdateIntervalMs - (timeMs % StepCountUpdateIntervalMs);
+						mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_STEP, delayMs);
 						break;
 				}
 			}
@@ -237,6 +248,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			stepCountPaint.setTypeface(typeface);
 			stepCountPaint.setTextAlign(Paint.Align.RIGHT);
 			stepCountPaint.setAntiAlias(true);
+			mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_STEP);	//歩数計タイマー開始
 
 
 			mBackgroundPaint = new Paint();
@@ -261,6 +273,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		public void onDestroy() {
 			Log.d("Pika","onDestroy");
 			mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
+			mUpdateTimeHandler.removeMessages(MSG_UPDATE_STEP);
+			if(sensorState){
+				mSensorManager.unregisterListener(this);
+				sensorState=false;
+			}
 			super.onDestroy();
 		}
 
@@ -295,19 +312,19 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				long currenttime = mTime.toMillis(false);
 
 				Log.d("Pika","current time: "+currenttime);
-				if(!sensorState&&(currenttime-mPrevTime>=300000)) {	//前回の取得から5分以上経過してたら
-					mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-					sensorState=true;
-					Log.d("Pika","Sensor registered");
-					mPrevTime=mTime.toMillis(false);
-				}
+//				if(!sensorState&&(currenttime-mPrevTime>=300000)) {	//前回の取得から5分以上経過してたら
+//					mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+//					sensorState=true;
+//					Log.d("Pika","Sensor registered");
+//					mPrevTime=mTime.toMillis(false);
+//				}
 			} else {
 				unregisterReceiver();
-				if(sensorState && mStepCount>=0){
-					mSensorManager.unregisterListener(this);
-					sensorState=false;
-					Log.d("Pika","Sensor unregistered [visibilityChanged]");
-				}
+//				if(sensorState && mStepCount>=0){
+//					mSensorManager.unregisterListener(this);
+//					sensorState=false;
+//					Log.d("Pika","Sensor unregistered [visibilityChanged]");
+//				}
 				choice=-1;
 				ambientanimecount=0;
 //				Log.d("Pika","visiblity false, count:"+ambientanimecount);
@@ -425,11 +442,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				ambientanimecount=0;
 			}
 
-			if(inAmbientMode&&sensorState && mStepCount>=0) {
-				mSensorManager.unregisterListener(this, sensorStepCounter);
-				sensorState=false;
-				Log.d("Pika","Sensor unregistered [inAmbientChanged]");
-			}
+//			if(inAmbientMode&&sensorState && mStepCount>=0) {
+//				mSensorManager.unregisterListener(this, sensorStepCounter);
+//				sensorState=false;
+//				Log.d("Pika","Sensor unregistered [inAmbientChanged]");
+//			}
 
 			if(!inAmbientMode){
 				//色を元に戻す
@@ -687,6 +704,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			}
 		}
 
+
+		private void updateStepCountTimer(){
+			mUpdateTimeHandler.removeMessages(MSG_UPDATE_STEP);
+			mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_STEP);
+		}
+
 		/**
 		 * Returns whether the {@link #mUpdateTimeHandler} timer should be running. The timer should
 		 * only run when we're visible and in interactive mode.
@@ -819,6 +842,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //				Log.d(TAG, "onConnectionFailed: " + result);
 //			}
 //		}
+
+		public void updateStepCount(){
+			mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+			sensorState=true;
+		}
 
 		@Override
 		public void onSensorChanged(SensorEvent event) {
