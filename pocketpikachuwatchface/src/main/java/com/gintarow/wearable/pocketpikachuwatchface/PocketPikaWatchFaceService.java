@@ -179,6 +179,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_MINUTE_DIGITS;
 //		int mInteractiveSecondDigitsColor =
 //				DigitalWatchFaceUtil.COLOR_VALUE_DEFAULT_AND_AMBIENT_SECOND_DIGITS;
+		int c_white;
+		int c_black;
 
 		/**
 		 * Sensor
@@ -214,6 +216,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			mYOffset = resources.getDimension(R.dimen.digital_y_offset);
 			mAmString = resources.getString(R.string.digital_am);
 			mPmString = resources.getString(R.string.digital_pm);
+			c_white = resources.getColor(R.color.white);
+			c_black = resources.getColor(R.color.black);
 
 			Drawable backgroundDrawable = resources.getDrawable(R.drawable.pika_bg);
 			mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
@@ -236,17 +240,18 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 
 			mBackgroundPaint = new Paint();
-			mBackgroundPaint.setColor(mInteractiveBackgroundColor);
+//			mBackgroundPaint.setColor(mInteractiveBackgroundColor);
+			mBackgroundPaint.setColor(c_black);
 //			mBackgroundPaint.setColor(resources.getColor(R.color.black));
 //			mHourPaint = createTextPaint(mInteractiveHourDigitsColor, BOLD_TYPEFACE);
 //			mMinutePaint = createTextPaint(mInteractiveMinuteDigitsColor);
 //			mSecondPaint = createTextPaint(mInteractiveSecondDigitsColor);
-			mHourPaint = createTextPaint(R.color.black, typeface);
-			mMinutePaint = createTextPaint(R.color.black, typeface);
-			mSecondPaint = createTextPaint(R.color.black, typeface);
+			mHourPaint = createTextPaint(c_black, typeface);
+			mMinutePaint = createTextPaint(c_black, typeface);
+			mSecondPaint = createTextPaint(c_black, typeface);
 //			mAmPmPaint = createTextPaint(resources.getColor(R.color.digital_am_pm));
 //			mColonPaint = createTextPaint(resources.getColor(R.color.digital_colons));
-			mColonPaint = createTextPaint(resources.getColor(R.color.dark_grey), typeface);
+			mColonPaint = createTextPaint(c_black, typeface);
 			Log.d("Pika","createTextPaint");
 
 			mTime = new Time();
@@ -428,10 +433,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 			if(!inAmbientMode){
 				//色を元に戻す
-				adjustPaintColorToCurrentMode(mHourPaint, R.color.black, R.color.white);
-				adjustPaintColorToCurrentMode(mMinutePaint, R.color.black, R.color.white);
-				adjustPaintColorToCurrentMode(mColonPaint, R.color.black, R.color.white);
-				adjustPaintColorToCurrentMode(mSecondPaint, R.color.black, R.color.white);
+				adjustPaintColorToCurrentMode(mHourPaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(mMinutePaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(mColonPaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(mSecondPaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(stepCountPaint, c_black, c_white);
+				Log.d("pika","color return [onAmbientModeChanged]");
 			}
 
 			if (mLowBitAmbient) {
@@ -454,7 +461,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		private void adjustPaintColorToCurrentMode(Paint paint, int interactiveColor,
 												   int ambientColor) {
 //			paint.setColor(isInAmbientMode() ? ambientColor : interactiveColor);
-			paint.setColor(shouldTimerBeRunning() ? ambientColor : interactiveColor);
+			paint.setColor(shouldTimerBeRunning() ? interactiveColor : ambientColor);
 		}
 
 		@Override
@@ -543,12 +550,12 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			if(isInAmbientMode()&&ambientanimecount==0) {
 				choice=-1;
 				//色変更
-				adjustPaintColorToCurrentMode(mHourPaint, R.color.black, R.color.white);
-				adjustPaintColorToCurrentMode(mMinutePaint, R.color.black, R.color.white);
-				adjustPaintColorToCurrentMode(mColonPaint, R.color.black, R.color.white);
-				adjustPaintColorToCurrentMode(mSecondPaint, R.color.black, R.color.white);
-
-				mBackgroundPaint.setAlpha(128);
+				adjustPaintColorToCurrentMode(mHourPaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(mMinutePaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(mColonPaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(mSecondPaint, c_black, c_white);
+				adjustPaintColorToCurrentMode(stepCountPaint, c_black, c_white);
+//				Log.d("pika","onDraw ChangeColor ambient+anime finish");
 				canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
 			}else{
 				int width = bounds.width();
@@ -652,13 +659,14 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 			// In ambient and mute modes, draw AM/PM. Otherwise, draw a second blinking
 			// colon followed by the seconds.
-			if (isInAmbientMode() || mMute) {
+//			if (isInAmbientMode() || mMute) {
 //				x += mColonWidth;
 //				canvas.drawText(getAmPmString(mTime.hour), x, mYOffset, mAmPmPaint);
-			} else {
+//			} else {
 //				if (mShouldDrawColons) {
 //					canvas.drawText(COLON_STRING, x, mYOffset, mColonPaint);
 //				}
+			if(shouldTimerBeRunning()&&!mMute){
 				x += (mColonWidth/2);
 				canvas.drawText(formatTwoDigitNumber(mTime.second), x, mYOffset,
 						mSecondPaint);
