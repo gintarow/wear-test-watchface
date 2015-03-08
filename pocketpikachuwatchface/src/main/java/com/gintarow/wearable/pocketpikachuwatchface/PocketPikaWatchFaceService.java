@@ -28,10 +28,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -77,9 +73,10 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 	/**
 	 * 歩数記録用
 	 */
-	static float mStepCount = -1;
-	static long mPrevTime = 0;
-	static boolean sensorState = false;
+//	static float totalStepCount = -1;
+//	static float todayStepCount = 0;
+//	static long mPrevTime = 0;
+//	static boolean sensorState = false;
 
 	@Override
 	public Engine onCreateEngine() {
@@ -87,7 +84,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 	}
 
 	private class Engine extends CanvasWatchFaceService.Engine
-			implements /*DataApi.DataListener,/*GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,*/ SensorEventListener {
+			/*implements /*DataApi.DataListener,/*GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, SensorEventListener*/ {
 		static final String COLON_STRING = ":";
 
 		/** Alpha value for drawing time when in mute mode. */
@@ -98,9 +95,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 
 		static final int MSG_UPDATE_TIME = 0;
 
-		static final int MSG_UPDATE_STEP = 1;
+//		static final int MSG_UPDATE_STEP = 1;
 
-		static final int MSG_RESET_STEP_DAY_BY_DAY = 2;
+//		static final int MSG_RESET_STEP_DAY_BY_DAY = 2;
 
 		/** How often {@link #mUpdateTimeHandler} ticks in milliseconds. */
 		long mInteractiveUpdateRateMs = NORMAL_UPDATE_RATE_MS;
@@ -124,16 +121,17 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 							mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
 						}
 						break;
-					case MSG_UPDATE_STEP:
-						Log.d(TAG,"update step count");
-						updateStepCount();
-						long timeMs = System.currentTimeMillis();
-						long delayMs = StepCountUpdateIntervalMs - (timeMs % StepCountUpdateIntervalMs);
-						mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_STEP, delayMs);
-						break;
-					case MSG_RESET_STEP_DAY_BY_DAY:
-						//todo 日毎に歩数計をリセット＋記録
-						break;
+//					case MSG_UPDATE_STEP:
+//						Log.d(TAG,"update step count");
+//						updateStepCount();
+//						long timeMs = System.currentTimeMillis();
+//						long delayMs = StepCountUpdateIntervalMs - (timeMs % StepCountUpdateIntervalMs);
+//						mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_STEP, delayMs);
+//						break;
+//					case MSG_RESET_STEP_DAY_BY_DAY:
+//						//todo 日毎に歩数計をリセット＋記録
+//						Log.d(TAG,"record daily step count");
+//						break;
 				}
 			}
 		};
@@ -198,11 +196,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		int c_white;
 		int c_black;
 
-		/**
-		 * Sensor
-		 */
-		SensorManager mSensorManager;
-		Sensor sensorStepCounter;
+//		/**
+//		 * Sensor
+//		 */
+//		SensorManager mSensorManager;
+//		Sensor sensorStepCounter;
 
 
 		/**
@@ -218,10 +216,9 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			}
 			super.onCreate(holder);
 
-			//センサー設定
-			mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-			sensorStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-//			mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+//			//センサー設定
+//			mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+//			sensorStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
 			setWatchFaceStyle(new WatchFaceStyle.Builder(PocketPikaWatchFaceService.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
@@ -253,7 +250,10 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			stepCountPaint.setTypeface(typeface);
 			stepCountPaint.setTextAlign(Paint.Align.RIGHT);
 			stepCountPaint.setAntiAlias(true);
-			mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_STEP);	//歩数計タイマー開始
+//			mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_STEP);
+			//歩数計開始
+			Intent intent = new Intent(getApplicationContext(),WearLifeLogService.class);
+			startService(intent);
 
 
 			mBackgroundPaint = new Paint();
@@ -278,11 +278,11 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		public void onDestroy() {
 			Log.d("Pika","onDestroy");
 			mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
-			mUpdateTimeHandler.removeMessages(MSG_UPDATE_STEP);
-			if(sensorState){
-				mSensorManager.unregisterListener(this);
-				sensorState=false;
-			}
+//			mUpdateTimeHandler.removeMessages(MSG_UPDATE_STEP);
+//			if(sensorState){
+//				mSensorManager.unregisterListener(this);
+//				sensorState=false;
+//			}
 			super.onDestroy();
 		}
 
@@ -325,7 +325,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //				}
 			} else {
 				unregisterReceiver();
-//				if(sensorState && mStepCount>=0){
+//				if(sensorState && prevStepCount>=0){
 //					mSensorManager.unregisterListener(this);
 //					sensorState=false;
 //					Log.d("Pika","Sensor unregistered [visibilityChanged]");
@@ -358,8 +358,6 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			if (!mRegisteredTimeZoneReceiver) {
 				return;
 			}
-			//TODO unregisterReceiver呼ばれてないって怒られる
-			//Service com.gintarow.wearable.pocketpikachuwatchface.PocketPikaWatchFaceService has leaked IntentReceiver android.support.wearable.watchface.WatchFaceService$Engine$1@17905c0b that was originally registered here. Are you missing a call to unregisterReceiver()?
 			mRegisteredTimeZoneReceiver = false;
 			PocketPikaWatchFaceService.this.unregisterReceiver(mTimeZoneReceiver);
 			Log.d("Pika","unregisterReceiver");
@@ -447,7 +445,7 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 				ambientanimecount=0;
 			}
 
-//			if(inAmbientMode&&sensorState && mStepCount>=0) {
+//			if(inAmbientMode&&sensorState && prevStepCount>=0) {
 //				mSensorManager.unregisterListener(this, sensorStepCounter);
 //				sensorState=false;
 //				Log.d("Pika","Sensor unregistered [inAmbientChanged]");
@@ -654,7 +652,8 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 			}
 
 			// Draw step count
-			String step = String.valueOf((int)mStepCount);
+//			String step = String.valueOf((int) totalStepCount);
+			String step = String.valueOf((int) WearLifeLogService.todayStepCount);
 //			Log.d("Pika","draw step: "+step);
 			canvas.drawText(step, XstepOffset, YstepOffset, stepCountPaint);
 
@@ -710,10 +709,10 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 		}
 
 
-		private void updateStepCountTimer(){
-			mUpdateTimeHandler.removeMessages(MSG_UPDATE_STEP);
-			mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_STEP);
-		}
+//		private void updateStepCountTimer(){
+//			mUpdateTimeHandler.removeMessages(MSG_UPDATE_STEP);
+//			mUpdateTimeHandler.sendEmptyMessage(MSG_UPDATE_STEP);
+//		}
 
 		/**
 		 * Returns whether the {@link #mUpdateTimeHandler} timer should be running. The timer should
@@ -848,27 +847,27 @@ public class PocketPikaWatchFaceService extends CanvasWatchFaceService {
 //			}
 //		}
 
-		public void updateStepCount(){
-			mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-			sensorState=true;
-		}
-
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-				Log.d("Pika","stepCounter:"+event.values[0]);
-				mStepCount = event.values[0];
-				if(sensorState && mStepCount>=0) {
-					mSensorManager.unregisterListener(this, sensorStepCounter);
-					sensorState=false;
-					Log.d("Pika","Sensor unregistered [sensorChanged]");
-				}
-			}
-		}
-
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-		}
+//		public void updateStepCount(){
+//			mSensorManager.registerListener(this, sensorStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+//			sensorState=true;
+//		}
+//
+//		@Override
+//		public void onSensorChanged(SensorEvent event) {
+//			if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+//				Log.d("Pika","stepCounter:"+event.values[0]);
+//				totalStepCount = event.values[0];
+//				if(sensorState && totalStepCount >=0) {
+//					mSensorManager.unregisterListener(this, sensorStepCounter);
+//					sensorState=false;
+//					Log.d("Pika","Sensor unregistered [sensorChanged]");
+//				}
+//			}
+//		}
+//
+//		@Override
+//		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//		}
 	}
 }

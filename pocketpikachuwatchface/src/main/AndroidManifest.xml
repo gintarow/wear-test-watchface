@@ -40,6 +40,12 @@
 			</intent-filter>
 		</service>
 
+		<service android:name="com.gintarow.wearable.pocketpikachuwatchface.WearLifeLogService" >
+			<intent-filter>
+				<action android:name="com.gintarow.wearable.pocketpikachuwatchface.PocketPikaWatchFaceService" />
+			</intent-filter>
+		</service>
+
 	</application>
 
 </manifest>
