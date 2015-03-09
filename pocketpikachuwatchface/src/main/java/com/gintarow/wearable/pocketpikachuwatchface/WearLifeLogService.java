@@ -133,7 +133,7 @@ public class WearLifeLogService extends Service implements SensorEventListener{
 			if(sensorState) {
 				mSensorManager.unregisterListener(this, sensorStepCounter);
 				todayStepCount += (event.values[0] - prevStepCount);	//差分を追加
-				if(todayStepCount<0){	//電源OFFでtotalが0になった場合
+				if(todayStepCount<0||todayStepCount==event.values[0]){	//電源OFFでtotalが0になった場合
 					todayStepCount=0;
 				}
 				//SharedPreferenceに記録
