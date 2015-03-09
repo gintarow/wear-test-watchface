@@ -30,6 +30,7 @@ public class WearLifeLogService extends Service implements SensorEventListener{
 	private SharedPreferences sharedPreferences;
 	static final String KEY_PREFERENCES = "WearLifeLog";
 	static final String KEY_PREF_TODAY_STEP_COUNT = "today_step_count";
+	static final String KEY_PREF_STEP_COUNT_SINCE_YESTERDAY = "since_yesterday";
 	static final int MSG_UPDATE_STEP = 0;
 	static final int MSG_SAVE_DAILY_STEP = 1;
 
@@ -79,7 +80,7 @@ public class WearLifeLogService extends Service implements SensorEventListener{
 		mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
 		sensorStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
-		time = new Time();
+		time = new Time("Asia/Tokyo");
 	}
 
 	@Override
@@ -98,11 +99,12 @@ public class WearLifeLogService extends Service implements SensorEventListener{
 		Log.d("Pika","life log service start");
 
 		time.setToNow();
-		date = time.year+String.format("%02d",time.month)+String.format("%02d",time.monthDay);
+		date = time.year+String.format("%02d",time.month+1)+String.format("%02d",time.monthDay);
+		prevStepCount = sharedPreferences.getInt(KEY_PREF_STEP_COUNT_SINCE_YESTERDAY,0);
 		LifeLogUpdater.removeMessages(MSG_UPDATE_STEP);
 		LifeLogUpdater.sendEmptyMessage(MSG_UPDATE_STEP);
 
-		return START_STICKY;
+		return START_NOT_STICKY;		//再起動しない
 	}
 
 	public void updateStepCount(){
@@ -120,7 +122,7 @@ public class WearLifeLogService extends Service implements SensorEventListener{
 		db.execSQL("insert into startAppList(name,pkg_name,conf) values ('アプリ１', 'com.pioneer...', 1);");
 		//新しい日にち
 		time.setToNow();
-		date = time.year+String.format("%02d",time.month)+String.format("%02d",time.monthDay);
+		date = time.year+String.format("%02d",time.month+1)+String.format("%02d",time.monthDay);
 	}
 
 	@Override
@@ -131,12 +133,13 @@ public class WearLifeLogService extends Service implements SensorEventListener{
 			if(sensorState) {
 				mSensorManager.unregisterListener(this, sensorStepCounter);
 				todayStepCount += (event.values[0] - prevStepCount);	//差分を追加
-				if(todayStepCount==event.values[0]){
+				if(todayStepCount<0){	//電源OFFでtotalが0になった場合
 					todayStepCount=0;
 				}
 				//SharedPreferenceに記録
 				SharedPreferences.Editor editor = sharedPreferences.edit();
 				editor.putInt(KEY_PREF_TODAY_STEP_COUNT, (int) todayStepCount);
+//				editor.putString(KEY_PREF_DATE,time.year+String.format("%02d",time.month+1)+String.format("%02d",time.monthDay));
 				editor.apply();
 				prevStepCount = event.values[0];
 
@@ -144,7 +147,9 @@ public class WearLifeLogService extends Service implements SensorEventListener{
 				int TimeMin = (int)tmpTimeMs/(1000*60);
 				int dayAmari = TimeMin%(60*24);
 				if(dayAmari==120){	//2:00:00~2:00:59
+//				if(dayAmari==0){	//0:00:00~0:00:59
 					todayStepCount = 0;
+					editor.putInt(KEY_PREF_STEP_COUNT_SINCE_YESTERDAY,(int)event.values[0]).apply();
 					saveDailyStepCount();	//DBに記録
 					Log.d("Pika","AM2:00 reset");
 				}
