@@ -95,6 +95,7 @@ public class Stop2GoWhiteWatchFaceService extends CanvasWatchFaceService {
 					.setHotwordIndicatorGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL)
 					.setViewProtection(WatchFaceStyle.PROTECT_HOTWORD_INDICATOR|WatchFaceStyle.PROTECT_STATUS_BAR)
 					.setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_TRANSLUCENT)
+//					.setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_OPAQUE)	//ピークカード不透明
 					.setShowSystemUiTime(false)
 					.build());
 
