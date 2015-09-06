@@ -80,7 +80,9 @@ public class Stop2GoWhiteWatchFaceService extends CanvasWatchFaceService {
         boolean mLowBitAmbient;
 
         Bitmap mBackgroundBitmap;
+        Bitmap mAmbientBackgroundBitmap;
         Bitmap mBackgroundScaledBitmap;
+        Bitmap mAmbientBackgroundScaledBitmap;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -92,8 +94,8 @@ public class Stop2GoWhiteWatchFaceService extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(Stop2GoWhiteWatchFaceService.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
 					.setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
-					.setHotwordIndicatorGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL)
-					.setViewProtection(WatchFaceStyle.PROTECT_HOTWORD_INDICATOR|WatchFaceStyle.PROTECT_STATUS_BAR)
+					.setHotwordIndicatorGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
+					.setViewProtection(WatchFaceStyle.PROTECT_HOTWORD_INDICATOR | WatchFaceStyle.PROTECT_STATUS_BAR)
 					.setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_TRANSLUCENT)
 //					.setPeekOpacityMode(WatchFaceStyle.PEEK_OPACITY_MODE_OPAQUE)	//ピークカード不透明
 					.setShowSystemUiTime(false)
@@ -101,7 +103,9 @@ public class Stop2GoWhiteWatchFaceService extends CanvasWatchFaceService {
 
             Resources resources = Stop2GoWhiteWatchFaceService.this.getResources();
             Drawable backgroundDrawable = resources.getDrawable(R.drawable.mondaine_base_wh_320);
+            Drawable ambientBackgroundDrawable = resources.getDrawable(R.drawable.mondaine_base_darkgrey_320);
             mBackgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
+            mAmbientBackgroundBitmap = ((BitmapDrawable)ambientBackgroundDrawable).getBitmap();
 
 			mHourPaint = new Paint();
 			mHourPaint.setARGB(255, 0, 0, 0);
@@ -197,9 +201,16 @@ public class Stop2GoWhiteWatchFaceService extends CanvasWatchFaceService {
                     || mBackgroundScaledBitmap.getHeight() != height) {
                 mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
                         width, height, true /* filter */);
+                mAmbientBackgroundScaledBitmap = Bitmap.createScaledBitmap(mAmbientBackgroundBitmap,
+                        width, height, true);
             }
-            canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
-
+            if (!isInAmbientMode()) {
+                canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
+//                Log.d(TAG,"background white");
+            }else{
+                canvas.drawBitmap(mAmbientBackgroundScaledBitmap, 0, 0, null);    //Ambient
+//                Log.d(TAG,"background grey");
+            }
             // Find the center. Ignore the window insets so that, on round watches with a
             // "chin", the watch face is centered on the entire screen, not just the usable
             // portion.
@@ -260,6 +271,7 @@ public class Stop2GoWhiteWatchFaceService extends CanvasWatchFaceService {
 				}
             }else{
 				canvas.drawCircle(centerX, centerY, 4, mTickPaint);
+                // todo 15秒毎に秒針を表示させたい
 			}
 
             // Draw every frame as long as we're visible and in interactive mode.

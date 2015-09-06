@@ -2,25 +2,18 @@
 <items version="2" >
 
     <item
-        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/6.5.87/classes.jar"
+        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="95482e7c792a7c0d5a9d5461e97726bd54fe9549">
-        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/classes-756e8dfa87a5f450694d9a97b6db72d4bb282e3c.jar" />
+        sha1="c0c912d58c9468b1f9d9769c8975afdf2c85d681">
+        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/classes-4c9118c65eef8e45d76084ef8a2aa893677aeee2.jar" />
     </item>
     <item
-        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/6.5.87/classes.jar"
+        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="6384c6cd674a22610b932d9464aa6938d067f285">
-        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/classes-78f481ee99cceac693aca19821244031835da222.jar" />
-    </item>
-    <item
-        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-567adcecd6adf171bfc7db6832611732fd15847a.jar" />
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/classes-941e8a944f453cfbdf5c3a650af476b57cc9f23d.jar" />
     </item>
     <item
         jar="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/6.5.87/classes.jar"
@@ -30,6 +23,13 @@
         <dex dex="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/pre-dexed/debug/classes-78bb5fac35e03a8d66ca0e23fb98bfc5e618536c.jar" />
     </item>
     <item
+        jar="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6384c6cd674a22610b932d9464aa6938d067f285">
+        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/pre-dexed/debug/classes-4dc424a2d201b44e4733e7e9512abdde1a804f42.jar" />
+    </item>
+    <item
         jar="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/exploded-aar/com.google.android.support/wearable/1.1.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -37,11 +37,11 @@
         <dex dex="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/pre-dexed/debug/classes-51a873c91294ab04bd3193edc2a2b243c268b259.jar" />
     </item>
     <item
-        jar="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/6.5.87/classes.jar"
+        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.8.0/classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="6384c6cd674a22610b932d9464aa6938d067f285">
-        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/pre-dexed/debug/classes-4dc424a2d201b44e4733e7e9512abdde1a804f42.jar" />
+        sha1="c5cafb324568d954780abb858c25db7ce675ab3c">
+        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/classes-3fada3bd46ef946d8356c5b4eeeffa3ff32d4ed4.jar" />
     </item>
     <item
         jar="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
@@ -79,6 +79,13 @@
         <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/classes-2af8116ac09a213a7c114ed46ea3db7a49e3d582.jar" />
     </item>
     <item
+        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/libs/internal_impl-22.2.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-b6fe1a8273026229c19079dd994bb54338c3c038.jar" />
+    </item>
+    <item
         jar="/Users/Shared/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -86,11 +93,11 @@
         <dex dex="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-751853247c52b4f5655c3dc072c480e57766f04c.jar" />
     </item>
     <item
-        jar="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jar="/Users/Shared/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/classes-f4320bebb3b7273c5fd8ef0c403b40dab1af3c46.jar" />
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/Users/Kikuchi/Development/Android/WatchFace/MondaineWatchFace/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-2dbf8e5e7801565221535168a5f1d4693ac070ce.jar" />
     </item>
     <item
         jar="/Users/Kikuchi/Development/Android/WatchFace/pocketpikachuwatchface/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
