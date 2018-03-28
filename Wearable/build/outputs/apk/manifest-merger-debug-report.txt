@@ -1,0 +1,132 @@
+-- Merging decision tree log ---
+manifest
+ADDED from AndroidManifest.xml:17:1
+	xmlns:android
+		ADDED from AndroidManifest.xml:17:11
+	package
+		ADDED from AndroidManifest.xml:18:9
+	android:versionName
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+	android:versionCode
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+uses-sdk
+ADDED from AndroidManifest.xml:20:5
+MERGED from com.android.support:support-v13:21.0.3:15:5
+MERGED from com.android.support:support-v4:22.2.0:20:5
+MERGED from com.google.android.support:wearable:1.1.0:6:5
+MERGED from com.android.support:support-v4:22.2.0:20:5
+MERGED from com.android.support:recyclerview-v7:21.0.0:15:5
+MERGED from com.android.support:support-v4:22.2.0:20:5
+MERGED from com.google.android.gms:play-services-wearable:7.8.0:18:5
+MERGED from com.google.android.gms:play-services-base:7.8.0:18:5
+MERGED from com.android.support:support-v4:22.2.0:20:5
+	android:targetSdkVersion
+		ADDED from AndroidManifest.xml:21:9
+	android:minSdkVersion
+		ADDED from AndroidManifest.xml:20:15
+uses-feature#android.hardware.type.watch
+ADDED from AndroidManifest.xml:23:5
+	android:name
+		ADDED from AndroidManifest.xml:23:19
+uses-permission#com.google.android.permission.PROVIDE_BACKGROUND
+ADDED from AndroidManifest.xml:26:5
+	android:name
+		ADDED from AndroidManifest.xml:26:22
+uses-permission#android.permission.WAKE_LOCK
+ADDED from AndroidManifest.xml:27:5
+	android:name
+		ADDED from AndroidManifest.xml:27:22
+uses-permission#android.permission.READ_CALENDAR
+ADDED from AndroidManifest.xml:30:5
+	android:name
+		ADDED from AndroidManifest.xml:30:22
+application
+ADDED from AndroidManifest.xml:32:5
+MERGED from com.android.support:support-v13:21.0.3:16:5
+MERGED from com.android.support:support-v4:22.2.0:22:5
+MERGED from com.google.android.support:wearable:1.1.0:10:5
+MERGED from com.android.support:support-v4:22.2.0:22:5
+MERGED from com.android.support:recyclerview-v7:21.0.0:17:5
+MERGED from com.android.support:support-v4:22.2.0:22:5
+MERGED from com.google.android.gms:play-services-wearable:7.8.0:19:5
+MERGED from com.google.android.gms:play-services-base:7.8.0:20:5
+MERGED from com.android.support:support-v4:22.2.0:22:5
+	android:label
+		ADDED from AndroidManifest.xml:35:13
+	android:allowBackup
+		ADDED from AndroidManifest.xml:33:13
+	android:icon
+		ADDED from AndroidManifest.xml:34:13
+service#com.example.android.wearable.watchface.MondaineWatchFaceService
+ADDED from AndroidManifest.xml:59:3
+	android:label
+		ADDED from AndroidManifest.xml:61:4
+	android:permission
+		ADDED from AndroidManifest.xml:62:4
+	android:name
+		ADDED from AndroidManifest.xml:60:4
+meta-data#android.service.wallpaper
+ADDED from AndroidManifest.xml:63:4
+	android:resource
+		ADDED from AndroidManifest.xml:65:5
+	android:name
+		ADDED from AndroidManifest.xml:64:5
+meta-data#com.google.android.wearable.watchface.preview
+ADDED from AndroidManifest.xml:66:4
+	android:resource
+		ADDED from AndroidManifest.xml:68:5
+	android:name
+		ADDED from AndroidManifest.xml:67:5
+meta-data#com.google.android.wearable.watchface.preview_circular
+ADDED from AndroidManifest.xml:69:4
+	android:resource
+		ADDED from AndroidManifest.xml:71:5
+	android:name
+		ADDED from AndroidManifest.xml:70:5
+meta-data#com.google.android.wearable.watchface.companionConfigurationAction
+ADDED from AndroidManifest.xml:72:4
+	android:name
+		ADDED from AndroidManifest.xml:73:5
+	android:value
+		ADDED from AndroidManifest.xml:74:5
+intent-filter#android.service.wallpaper.WallpaperService+com.google.android.wearable.watchface.category.WATCH_FACE
+ADDED from AndroidManifest.xml:75:4
+action#android.service.wallpaper.WallpaperService
+ADDED from AndroidManifest.xml:76:5
+	android:name
+		ADDED from AndroidManifest.xml:76:13
+category#com.google.android.wearable.watchface.category.WATCH_FACE
+ADDED from AndroidManifest.xml:77:5
+	android:name
+		ADDED from AndroidManifest.xml:77:15
+service#com.example.android.wearable.watchface.Stop2GoWhiteWatchFaceService
+ADDED from AndroidManifest.xml:81:3
+	android:label
+		ADDED from AndroidManifest.xml:83:4
+	android:permission
+		ADDED from AndroidManifest.xml:84:4
+	android:name
+		ADDED from AndroidManifest.xml:82:4
+service#com.example.android.wearable.watchface.Stop2GoAmbentBlackWatchFaceService
+ADDED from AndroidManifest.xml:103:3
+	android:label
+		ADDED from AndroidManifest.xml:105:4
+	android:permission
+		ADDED from AndroidManifest.xml:106:4
+	android:name
+		ADDED from AndroidManifest.xml:104:4
+meta-data#com.google.android.gms.version
+ADDED from AndroidManifest.xml:278:9
+MERGED from com.google.android.gms:play-services-base:7.8.0:21:9
+	android:name
+		ADDED from AndroidManifest.xml:279:17
+	android:value
+		ADDED from AndroidManifest.xml:280:17
+activity#android.support.v7.widget.TestActivity
+ADDED from com.android.support:recyclerview-v7:21.0.0:18:9
+	android:label
+		ADDED from com.android.support:recyclerview-v7:21.0.0:18:19
+	android:name
+		ADDED from com.android.support:recyclerview-v7:21.0.0:18:60
